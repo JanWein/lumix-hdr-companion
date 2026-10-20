@@ -38,7 +38,7 @@ public class LumixBleCodecTest {
         assertArrayEquals(ascii("S9!"),LumixBleCodec.decode(hex("201a1664fedcba67"),hex("0123456789abcdef")));
     }
     @Test public void appInfoIsExactly32AsciiBytesWithZeroTermination(){
-        byte[] app=LumixBleCodec.appInfo();byte[] name=ascii("Lumix HDR Companion 0.3.5");
+        byte[] app=LumixBleCodec.appInfo();byte[] name=ascii("Lumix HDR Companion 0.3.6");
         assertEquals(32,app.length);assertArrayEquals(name,Arrays.copyOf(app,name.length));
         for(int i=name.length;i<app.length;i++)assertEquals(0,app[i]);
     }

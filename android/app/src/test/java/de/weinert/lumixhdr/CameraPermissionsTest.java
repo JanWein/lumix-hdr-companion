@@ -21,7 +21,7 @@ public class CameraPermissionsTest {
     private Activity activity;private ModernCameraPanel panel;
     @Before public void setUp(){
         activity=Robolectric.buildActivity(Activity.class).setup().get();
-        panel=new ModernCameraPanel(activity,new LinearLayout(activity),activity.getSharedPreferences("permissions",Context.MODE_PRIVATE),task->{},images->{});
+        panel=new ModernCameraPanel(activity,new LinearLayout(activity),activity.getSharedPreferences("permissions",Context.MODE_PRIVATE),task->true,images->{});
         shadowOf(RuntimeEnvironment.getApplication()).denyPermissions(required());
     }
     @After public void tearDown(){panel.close();activity.finish();}

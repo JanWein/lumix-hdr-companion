@@ -54,7 +54,7 @@ public class LumixLabClientTest {
     @Test public void ownIdentityAndNoCopiedPanasonicAppInfo() throws Exception {
         Transport t=new Transport();Reply r=t.json("{\"Header\":{\"ResponseCode\":200},\"Data\":{\"AuthToken\":\"token\"}}");
         LumixLabClient c=new LumixLabClient(t,"192.168.54.1",PIN);c.authenticate(UUID,"Own Android");
-        assertEquals(UUID,r.request().getString("Uuid"));assertEquals("Lumix HDR Companion 0.3.5",r.request().getString("AppInfo"));assertEquals("Own Android",r.request().getString("FriendlyName"));assertNull(r.getRequestProperty("Authorization"));
+        assertEquals(UUID,r.request().getString("Uuid"));assertEquals("Lumix HDR Companion 0.3.6",r.request().getString("AppInfo"));assertEquals("Own Android",r.request().getString("FriendlyName"));assertNull(r.getRequestProperty("Authorization"));
     }
     @Test public void invalidOrMissingAuthTokenCannotCreateSession() throws Exception {
         for(String data:new String[]{"{}","{\"AuthToken\":123}","{\"AuthToken\":\"\"}","{\"AuthToken\":\"bad\\r\\nvalue\"}","{\"AuthToken\":\"bad'value\"}"}){

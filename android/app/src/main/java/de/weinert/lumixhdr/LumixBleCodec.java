@@ -35,5 +35,5 @@ final class LumixBleCodec {
         if(uuid==null||!uuid.matches("[0-9a-fA-F]{32}"))throw new IOException("Eigene App-ID muss aus 32 Hex-Zeichen bestehen");
         byte[] raw=new byte[16];for(int i=0;i<16;i++)raw[i]=(byte)Integer.parseInt(uuid.substring(i*2,i*2+2),16);return raw;
     }
-    static byte[] appInfo(){return Arrays.copyOf("Lumix HDR Companion 0.3.5".getBytes(StandardCharsets.US_ASCII),32);}
+    static byte[] appInfo(){return Arrays.copyOf("Lumix HDR Companion 0.3.6".getBytes(StandardCharsets.US_ASCII),32);}
 }

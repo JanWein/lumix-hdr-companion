@@ -1,12 +1,11 @@
-# Lumix HDR Companion 0.3.5
+# Lumix HDR Companion 0.3.6
 
-## S9-Verbindung korrigiert: zuerst Bluetooth, dann WLAN
+## S9-Verbindung: Lab-Ablauf erneut abgeglichen
 
-Die Kameraeinrichtung sucht jetzt tatsächlich per BLE nach der S9. Zuvor wurden
-nur bereits in Android gekoppelte Geräte aufgelistet. Die App führt nun die aus
-LUMIX Lab 3.1.0 abgeleitete Anmeldung mit eigener App-ID durch, liest WLAN-Daten
-und Zertifikatsfingerabdruck und öffnet Androids Kamera-WLAN-Verbindungsdialog.
-WLAN-Verlust beendet auch die zugehörige Sitzung.
+Version 0.3.6 gleicht Bluetooth-Timing, Benachrichtigungen und die gekoppelte
+WPA2/WPA3-Auswahl an den erneut untersuchten LUMIX-Lab-Ablauf an. Nach der
+Kameraauswahl bleiben Fortschritt und Fehler sichtbar. Über **Diagnose kopieren**
+kannst du die Verbindungsschritte ohne WLAN-Schlüssel oder Token weitergeben.
 
 An der Kamera **Bluetooth → Kopplung → Neues Gerät hinzufügen** wählen, dann
 in der App **Kamera → Kamera suchen**. Android-Berechtigungen sowie die
@@ -14,15 +13,15 @@ Kopplungs-/WLAN-Abfragen bestätigen. Erst nach erfolgreicher HTTPS-Anmeldung
 erscheint „Verbunden“.
 
 Anleitung, Build und Grenzen: [S9-Verbindung](docs/S9_CONNECTION.md).
-Statische Belege: [Protokollanalyse 0.3.5](docs/PROTOCOL_EVIDENCE_035.md).
-Prüfung: [186 Tests erfolgreich, Lint ohne Fehler, APK gebaut](docs/VALIDATION_035.md).
+Statische Belege: [Protokollanalyse 0.3.6](docs/PROTOCOL_EVIDENCE_036.md).
+Prüfung: [229 Tests erfolgreich, Lint ohne Fehler, APK gebaut](docs/VALIDATION_036.md).
 **Ein vollständiger Test an einer echten S9 steht noch aus.**
 
 Native Android-App und Python-Desktop-Anwendung für lokale HDR-Verarbeitung.
 Das öffentliche Projekt umfasst Quellcode, Tests, Dokumentation, synthetische
 Beispielbilder und die bisherigen Prüfberichte.
 
-**[Android-APK und Quellarchiv herunterladen](../../releases/tag/v0.3.5)**
+**[Android-APK und Quellarchiv herunterladen](../../releases/tag/v0.3.6)**
 
 ![Bilder mit eigenem Namen](docs/validation-0.3.4/images-renamed.png)
 
@@ -55,7 +54,7 @@ Ein eigener Build verwendet den lokalen Debug-Schlüssel und kann eine mit einem
 anderen Schlüssel installierte APK nicht direkt ersetzen.
 
 Python-Installation und Nutzung sind weiter unten beschrieben. Prüfungen:
-`python -m pytest -q`. Die Android-App ist Version 0.3.5; das unabhängige Python-
+`python -m pytest -q`. Die Android-App ist Version 0.3.6; das unabhängige Python-
 Paket behält seine Version 0.1.0.
 
 

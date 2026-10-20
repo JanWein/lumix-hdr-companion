@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /** Experimental camera operations kept separate from the existing local HDR flow. */
 final class ModernCameraPanel implements AutoCloseable {
     interface Task{void run() throws Exception;}
-    interface Runner{void run(Task task);}
+    interface Runner{boolean run(Task task);}
     interface DownloadAction{void download(List<LumixLabClient.Image> selected);}
     private final Activity activity;private final SharedPreferences prefs;private final Runner runner;private final DownloadAction downloadAction;
     private final ConnectivityManager connectivity;
@@ -36,6 +36,9 @@ final class ModernCameraPanel implements AutoCloseable {
     private final AtomicInteger configuration=new AtomicInteger();
     private CameraBleSession bleSession;private CameraBleScanner scanner;
     private CameraWifiConnector wifiConnector;private Runnable permissionAction;
+    private final ConnectionTrace trace=new ConnectionTrace("0.3.6",Build.VERSION.SDK_INT);
+    private AlertDialog connectionDialog,errorDialog;private TextView connectionProgress;
+    private boolean connecting;
     private static final int CAMERA_PERMISSIONS=42;
     private volatile boolean closed;
     private final StudioTheme style;
@@ -83,6 +86,7 @@ final class ModernCameraPanel implements AutoCloseable {
         pin=edit(diagnostics,"SHA-256-Fingerabdruck",prefs.getString("camera_pin",""));
         label(diagnostics,"Aus bekannter Quelle oder per Bluetooth von deiner Kamera. Keine ungeprüfte Übernahme aus HTTPS.",13);
         add(diagnostics,"Kamera per Bluetooth suchen",v->readFingerprint());
+        add(diagnostics,"Verbindungsdiagnose kopieren",v->copyConnectionTrace());
         add(diagnostics,"Vorhandenes WLAN manuell per HTTPS anmelden",v->chooseNetwork(false));
         label(diagnostics,"Eigene App-ID: "+prefs.getString("camera_uuid",""),12);
         add(diagnostics,"Kamerazustand lesen",v->run(()->show(client().state())));
@@ -116,7 +120,7 @@ final class ModernCameraPanel implements AutoCloseable {
             selected=n.equals(network)||n.equals(pendingNetwork);
             if(selected)invalidate();
         }
-        if(selected)message("Kamera-WLAN getrennt. Erneut verbinden und anmelden.");else refreshConnection();
+        if(selected)ui(()->{if(connecting)connectionFailure("Kamera-WLAN getrennt. Erneut verbinden und anmelden.");else message("Kamera-WLAN getrennt. Erneut verbinden und anmelden.");});else refreshConnection();
     }
     void refreshConnection(){ui(()->{
         boolean connected=isConnected();connectionBadge.setText(connected?"Verbunden":"Noch nicht verbunden");connectionBadge.setTextColor(connected?style.success:style.secondary);connectAction.setText(connected?"Verbindung trennen":"Verbinden");style.enabled(browseAction,connected);style.enabled(captureAction,connected);setupCard.setVisibility(connected?View.GONE:View.VISIBLE);photosCard.setVisibility(connected?View.VISIBLE:View.GONE);disconnectAction.setVisibility(connected||bleSession!=null||wifiConnector!=null?View.VISIBLE:View.GONE);
@@ -136,9 +140,52 @@ final class ModernCameraPanel implements AutoCloseable {
     private void add(LinearLayout root,String text,View.OnClickListener listener){style.gap(root,8);root.addView(style.action(text,false,listener));}
     private void ui(Runnable r){activity.runOnUiThread(()->{if(!closed)r.run();});}
     private void message(String s){ui(()->state.setText(s));refreshConnection();}
+    private void connectionProgress(String text){message(text);if(connectionProgress!=null)connectionProgress.setText(text);}
+    private void copyConnectionTrace(){
+        android.content.ClipboardManager clipboard=(android.content.ClipboardManager)activity.getSystemService(Context.CLIPBOARD_SERVICE);
+        clipboard.setPrimaryClip(ClipData.newPlainText("Lumix-Verbindungsdiagnose",trace.report()));
+        Toast.makeText(activity,"Verbindungsdiagnose kopiert – ohne WLAN-Schlüssel oder Token",Toast.LENGTH_SHORT).show();
+    }
+    private void beginConnection(){
+        finishConnectionDialog();
+        trace.reset();connecting=true;
+        if(errorDialog!=null){errorDialog.dismiss();errorDialog=null;}
+        LinearLayout body=style.column();body.setPadding(style.dp(24),style.dp(16),style.dp(24),style.dp(16));
+        connectionProgress=style.caption("Bluetooth-Verbindung wird vorbereitet …");connectionProgress.setAccessibilityLiveRegion(View.ACCESSIBILITY_LIVE_REGION_POLITE);body.addView(connectionProgress);
+        connectionDialog=new AlertDialog.Builder(activity).setTitle("Mit Kamera verbinden").setView(body)
+            .setNegativeButton("Abbrechen",(d,w)->{trace.record("ui.cancel",0);disconnectCamera();message("Verbindung abgebrochen.");})
+            .setNeutralButton("Diagnose kopieren",null).create();
+        connectionDialog.setCanceledOnTouchOutside(false);
+        connectionDialog.setOnCancelListener(d->{trace.record("ui.cancel",0);disconnectCamera();message("Verbindung abgebrochen.");});
+        connectionDialog.setOnShowListener(d->((AlertDialog)d).getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(v->copyConnectionTrace()));
+        connectionDialog.show();
+    }
+    private void finishConnectionDialog(){
+        connecting=false;if(connectionDialog!=null){connectionDialog.dismiss();connectionDialog=null;}connectionProgress=null;
+    }
+    private void connectionFailure(String error){
+        if(closed)return;trace.record("ui.error",0);disconnectCamera();message(error);
+        if(activity.isFinishing())return;
+        if(errorDialog!=null)errorDialog.dismiss();
+        errorDialog=new AlertDialog.Builder(activity).setTitle("Verbindung fehlgeschlagen").setMessage(error)
+            .setPositiveButton("Fertig",null).setNeutralButton("Diagnose kopieren",(d,w)->copyConnectionTrace()).show();
+    }
     private void clearLists(){gallery=Collections.emptyList();settingValues=Collections.emptyList();settingType=null;}
     private void invalidate(){synchronized(configuration){configuration.incrementAndGet();if(client!=null)client.disconnect();client=null;network=null;pendingNetwork=null;clearLists();}}
-    private void run(Task t){runner.run(()->{try{t.run();}catch(Exception e){if(client!=null&&!client.isAuthenticated())clearLists();message("Hinweis: "+e.getMessage());throw e;}});}
+    private void run(Task t){
+        final int epoch=configuration.get();
+        boolean accepted=runner.run(()->{try{t.run();}catch(Exception e){ui(()->{
+            if(epoch!=configuration.get())return;
+            if(client!=null&&!client.isAuthenticated())clearLists();
+            if(connecting){trace.record("https.error",0);connectionFailure("Hinweis: "+e.getMessage());}
+            else message("Hinweis: "+e.getMessage());
+        });}});
+        if(!accepted)ui(()->{
+            if(epoch!=configuration.get())return;
+            String text="Die vorherige Verarbeitung läuft noch. Warte kurz und versuche die Verbindung erneut.";
+            if(connecting)connectionFailure(text);else message(text);
+        });
+    }
     private void command(String cmd){run(()->show(client().command(cmd)));}
     private void show(JSONObject response){try{String text=((JSONObject)redact(response)).toString(2);String view=text.length()>18000?text.substring(0,18000)+"\n… gekürzt":text;ui(()->details.setText(view));}catch(Exception e){message("Antwort konnte nicht angezeigt werden");}}
     static Object redact(Object node) throws JSONException {
@@ -155,6 +202,7 @@ final class ModernCameraPanel implements AutoCloseable {
     private String gateway(Network n){LinkProperties p=connectivity.getLinkProperties(n);if(p!=null)for(RouteInfo r:p.getRoutes())if(r.isDefaultRoute()&&r.getGateway() instanceof java.net.Inet4Address)return r.getGateway().getHostAddress();return "";}
     private void selectedNetwork(Network n,boolean gatewayOnly){
         if(gatewayOnly){String g=gateway(n);if(g.isEmpty()){message("Kein IPv4-Gateway gefunden. Kamera-IP manuell eintragen.");return;}host.setText(g);message("Gateway übernommen. Fingerabdruck prüfen und HTTPS anmelden.");return;}
+        if(!connecting)beginConnection();
         final String address=host.getText().toString().trim(),fingerprint=pin.getText().toString().trim();final int epoch=configuration.get();
         run(()->{
             synchronized(configuration){
@@ -166,6 +214,7 @@ final class ModernCameraPanel implements AutoCloseable {
             try{
                 next=new LumixLabClient(url->(java.net.HttpURLConnection)n.openConnection(url),address,fingerprint);
                 final String normalizedPin=CameraTrust.formatPin(CameraTrust.parsePin(fingerprint));
+                trace.record("https.start",0);ui(()->connectionProgress("Melde die App über das Kamera-WLAN an …"));
                 next.authenticate(prefs.getString("camera_uuid",""),"Lumix HDR Android");
                 synchronized(configuration){
                     if(closed||epoch!=configuration.get())throw new IOException("Anmeldung verworfen: Verbindungsdaten wurden geändert oder Sitzung getrennt");
@@ -176,6 +225,7 @@ final class ModernCameraPanel implements AutoCloseable {
                 ui(()->{synchronized(configuration){
                     if(epoch!=configuration.get()||client!=connected||!isWifi(n))return;
                     prefs.edit().putString("camera_host",address).putString("camera_pin",normalizedPin).apply();
+                    trace.record("https.success",200);finishConnectionDialog();
                     message("Deine Kamera ist verbunden. Du kannst jetzt Fotos auswählen.");
                 }});
             }finally{
@@ -256,28 +306,33 @@ final class ModernCameraPanel implements AutoCloseable {
     }
     private void cameraSelected(BluetoothDevice device){
         if(bleSession!=null)bleSession.close();
+        beginConnection();
         bleSession=new CameraBleSession(new CameraBleSession.Callback(){
-            public void progress(String text){if(!closed)message(text);}
-            public void error(String error){if(!closed){disconnectCamera();message(error);}}
+            public void diagnostic(String event,int value){trace.record(event,value);}
+            public void progress(String text){if(!closed)connectionProgress(text);}
+            public void error(String error){if(!closed)connectionFailure(error);}
             public void ready(String ssid,String password,String fingerprint){
                 if(closed)return;pin.setText(fingerprint);
-                message("Kamera-WLAN ist bereit. Bestätige jetzt die Verbindung im Android-Dialog.");
+                connectionProgress("Kamera-WLAN ist bereit. Bestätige jetzt die Verbindung im Android-Dialog.");
                 if(wifiConnector!=null)wifiConnector.close();
                 wifiConnector=new CameraWifiConnector(activity,new CameraWifiConnector.Callback(){
+                    public void diagnostic(String event,int value){trace.record(event,value);}
                     public void connected(Network selected,String gateway){if(closed)return;host.setText(gateway);selectedNetwork(selected,false);}
-                    public void lost(){if(closed)return;disconnectCamera();message("Kamera-WLAN getrennt. Erneut verbinden.");}
-                    public void error(String error){if(!closed){disconnectCamera();message(error);}}
-                });wifiConnector.connect(ssid,password);
+                    public void lost(){if(closed)return;connectionFailure("Kamera-WLAN getrennt. Erneut verbinden.");}
+                    public void error(String error){if(!closed){trace.record("wifi.error",0);connectionFailure(error);}}
+                });trace.record("wifi.request",0);wifiConnector.connect(ssid,password);
             }
         });bleSession.connect(activity,device,prefs.getString("camera_uuid",""),"Lumix HDR Android");
     }
     private void disconnectCamera(){
+        finishConnectionDialog();
         invalidate();permissionAction=null;if(scanner!=null){scanner.close();scanner=null;}
         if(bleSession!=null){bleSession.close();bleSession=null;}
         if(wifiConnector!=null){wifiConnector.close();wifiConnector=null;}
     }
     @Override public void close(){
         synchronized(configuration){closed=true;invalidate();}
+        finishConnectionDialog();if(errorDialog!=null){errorDialog.dismiss();errorDialog=null;}
         if(observingNetworks){connectivity.unregisterNetworkCallback(networkCallback);observingNetworks=false;}
         if(bleSession!=null)bleSession.close();
         if(scanner!=null)scanner.close();if(wifiConnector!=null)wifiConnector.close();permissionAction=null;
