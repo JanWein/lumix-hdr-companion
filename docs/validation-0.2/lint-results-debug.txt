@@ -1,0 +1,82 @@
+/workspace/scratch/3b73f270b7cd/app_v02/lumix-hdr/android/app/src/main/java/de/weinert/lumixhdr/ModernCameraPanel.java:31: Warning: Consider using apply() instead; commit writes its data to persistent storage immediately, whereas apply will handle it in the background [ApplySharedPref]
+        if(!prefs.contains("camera_uuid"))prefs.edit().putString("camera_uuid",UUID.randomUUID().toString().replace("-","")).commit();
+                                                                                                                             ~~~~~~~~
+
+   Explanation for issues of type "ApplySharedPref":
+   Consider using apply() instead of commit on shared preferences. Whereas
+   commit blocks and writes its data to persistent storage immediately, apply
+   will handle it in the background.
+
+/workspace/scratch/3b73f270b7cd/app_v02/lumix-hdr/android/app/src/main/java/de/weinert/lumixhdr/CameraTrust.java:38: Warning: Implementing a custom X509TrustManager is error-prone and likely to be insecure. It is likely to disable certificate validation altogether, and is non-trivial to implement correctly without calling Android's default implementation. [CustomX509TrustManager]
+        X509TrustManager trust=new X509TrustManager(){
+                                   ~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "CustomX509TrustManager":
+   This check looks for custom X509TrustManager implementations.
+
+   https://goo.gle/CustomX509TrustManager
+
+/workspace/scratch/3b73f270b7cd/app_v02/lumix-hdr/android/app/src/main/AndroidManifest.xml:8: Warning: The attribute android:allowBackup is deprecated from Android 12 and higher and may be removed in future versions. Consider adding the attribute android:dataExtractionRules specifying an @xml resource which configures cloud backups and device transfers on Android 12 and higher. [DataExtractionRules]
+        android:allowBackup="false" android:supportsRtl="true" android:usesCleartextTraffic="true">
+                             ~~~~~
+
+   Explanation for issues of type "DataExtractionRules":
+   Before Android 12, the attributes android:allowBackup and
+   android:fullBackupContent were used to configure all forms of backup,
+   including cloud backups, device-to-device transfers and adb backup.
+
+   In Android 12 and higher, these attributes have been deprecated and will
+   only apply to cloud backups. You should instead use the attribute
+   android:dataExtractionRules, specifying an @xml resource that configures
+   which files to back up, for cloud backups and for device-to-device
+   transfers, separately. If your minSdkVersion supports older versions,
+   you'll still want to specify an android:fullBackupContent resource if the
+   default behavior is not right for your app.
+
+   https://developer.android.com/about/versions/12/backup-restore#xml-changes
+   https://goo.gle/DataExtractionRules
+
+/workspace/scratch/3b73f270b7cd/app_v02/lumix-hdr/android/app/src/main/AndroidManifest.xml:7: Warning: Should explicitly set android:icon, there is no default [MissingApplicationIcon]
+    <application android:label="Lumix HDR" android:theme="@android:style/Theme.Material.Light.NoActionBar"
+     ~~~~~~~~~~~
+
+   Explanation for issues of type "MissingApplicationIcon":
+   You should set an icon for the application as whole because there is no
+   default. This attribute must be set as a reference to a drawable resource
+   containing the image (for example @drawable/icon).
+
+   https://developer.android.com/studio/publish/preparing#publishing-configure
+
+/workspace/scratch/3b73f270b7cd/app_v02/lumix-hdr/android/app/src/main/java/de/weinert/lumixhdr/MainActivity.java:31: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+        if(!OpenCVLoader.initLocal()) {TextView error=new TextView(this);error.setText("OpenCV konnte nicht geladen werden");setContentView(error);return;}
+                                                                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/3b73f270b7cd/app_v02/lumix-hdr/android/app/src/main/java/de/weinert/lumixhdr/MainActivity.java:33: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+        TextView title=new TextView(this);title.setText("Lumix HDR");title.setTextSize(30);root.addView(title);
+                                                        ~~~~~~~~~~~
+/workspace/scratch/3b73f270b7cd/app_v02/lumix-hdr/android/app/src/main/java/de/weinert/lumixhdr/MainActivity.java:34: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+        TextView intro=new TextView(this);intro.setText("Belichtungsreihen lokal zusammenführen. JPEG-Vorschau und optional Radiance-HDR. Prototyp 0.2 mit experimenteller S9-HTTPS-Anbindung");root.addView(intro);
+                                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/3b73f270b7cd/app_v02/lumix-hdr/android/app/src/main/java/de/weinert/lumixhdr/MainActivity.java:38: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+        align=new CheckBox(this);align.setText("Kamerabewegung ausrichten");align.setChecked(true);root.addView(align);
+                                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/3b73f270b7cd/app_v02/lumix-hdr/android/app/src/main/java/de/weinert/lumixhdr/MainActivity.java:44: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+        host=new EditText(this);host.setSingleLine();host.setHint("Kamera-IP");host.setText("192.168.54.1");root.addView(host);
+                                                                                            ~~~~~~~~~~~~~~
+/workspace/scratch/3b73f270b7cd/app_v02/lumix-hdr/android/app/src/main/java/de/weinert/lumixhdr/MainActivity.java:46: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+        TextView warning=new TextView(this);warning.setText("WLAN-Test: alte Lumix-API, S9-Anmeldung unbestätigt. Kamera wechselt kurz in Wiedergabe. Erste 30 Medieneinträge. Bei Ablehnung Dateiimport nutzen. Ordner-Automatik läuft nur bei geöffneter App.");root.addView(warning);
+                                                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "SetTextI18n":
+   When calling TextView#setText
+   * Never call Number#toString() to format numbers; it will not handle
+   fraction separators and locale-specific digits properly. Consider using
+   String#format with proper format specifications (%d or %f) instead.
+   * Do not pass a string literal (e.g. "Hello") to display text. Hardcoded
+   text can not be properly translated to other languages. Consider using
+   Android resource strings instead.
+   * Do not build messages by concatenating text chunks. Such messages can not
+   be properly translated.
+
+   https://developer.android.com/guide/topics/resources/localization.html
+
+0 errors, 10 warnings
