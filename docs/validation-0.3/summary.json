@@ -1,0 +1,27 @@
+{
+  "tests": 37,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "uiTests": 7,
+  "lintErrors": 0,
+  "lintWarnings": 11,
+  "renderedUi": [
+    "light",
+    "dark",
+    "camera",
+    "emptyResults",
+    "settings",
+    "readySelection",
+    "320dp_130percent_font"
+  ],
+  "apk": "Lumix_HDR_Companion_0.3_Android_ARM64.apk",
+  "sha256": "b202c57043ab98d95c6217013462299cd3e4b22a1e739890d6b64c1b21cdf442",
+  "versionCode": 3,
+  "versionName": "0.3.0-design-preview",
+  "minSdk": 29,
+  "targetSdk": 35,
+  "signingCertificateMatchesPrevious": true,
+  "physicalAndroidDeviceTested": false,
+  "s9HardwareTested": false
+}
