@@ -1,4 +1,9 @@
-# S9: Bluetooth-Suche und WLAN-Übergabe in 0.3.5
+# S9: Bluetooth-Suche und WLAN-Übergabe in 0.3.6
+
+Version 0.3.6 korrigiert weitere Unterschiede zum statisch untersuchten
+Lab-Ablauf: Bluetooth-Timing, lokale Benachrichtigungen, AP-Status und die
+gemeinsame WPA2/WPA3-Auswahl. Dass dies die Verbindung auf der betroffenen S9
+herstellt, muss weiterhin am Gerät geprüft werden.
 
 ## Ursache des bisherigen Fehlers
 
@@ -25,6 +30,12 @@ für die eigene App-ID nicht.
 7. Erst nach erfolgreicher HTTPS-Anmeldung erscheint **Verbunden**. Danach
    **Fotos auswählen** verwenden.
 
+Nach der Kameraauswahl zeigt ein Dialog den aktuellen Schritt. Ein Abbruch
+erscheint als **Verbindung fehlgeschlagen** mit dem Grund. Falls es weiter
+scheitert, **Diagnose kopieren** wählen und den Text zur Fehlersuche weitergeben.
+Der Bericht enthält App-Version, Android-API, Schritte, Zeitabstände und
+numerische Statuscodes; keine WLAN-Zugangsdaten, Kamera-Adressen oder Tokens.
+
 Die Suche läuft 15 Sekunden. Wenn keine Kamera erscheint, die S9 erneut in
 Kopplungsbereitschaft versetzen und nochmals suchen. Eine vorherige Kopplung in
 den allgemeinen Android-Bluetooth-Einstellungen ist nicht erforderlich.
@@ -37,14 +48,18 @@ müssen dann zur ausgewählten Kamera passen.
 
 - BLE-Suche erkennt den in Lab verwendeten Werbedienst
   `054ac620-3214-11e6-ac0d-0002a5d5c51b`; zusätzlich werden Kameranamen erkannt.
-- Direkte GATT-Verbindung mit LE-Transport; MTU-Anfrage 57 und Dienstsuche.
+- Direkte GATT-Verbindung mit LE-Transport; eine Sekunde warten, MTU-Anfrage 57
+  und Dienstsuche. NOTIFY-Merkmale lokal aktivieren, keine zusätzlichen CCCD-Schreibzugriffe.
 - `INITIAL_INFORM` lesen, danach eigene UUID und App-Namen mit der beobachteten
   Blockcodierung übertragen. Die App-Information wird separat als 32 rohe,
   mit Nullen aufgefüllte Bytes gesendet. BLE und HTTPS verwenden
   dieselbe dauerhaft erzeugte eigene UUID.
-- Registrierungsmodus `02` mit Antwort schreiben. SSID, codierten WLAN-Schlüssel
-  und SHA-256-Zertifikatsfingerabdruck lesen.
-- `ACTION_MODE=01` ohne Antwort schreiben und auf `AP_STATE=01` warten.
+- Auf Handys mit WPA3-SAE-Unterstützung WPA3 verwenden. Andernfalls sowie im
+  Harmony-Kompatibilitätsfall erst den bedingten Befehl `02` mit Antwort
+  schreiben und WPA2 verwenden. SSID, codierten WLAN-Schlüssel und
+  SHA-256-Zertifikatsfingerabdruck lesen.
+- `ACTION_MODE=01` ohne Antwort schreiben und auf die Benachrichtigung
+  `AP_STATE=01` warten, ohne einen zusätzlichen AP-Status-Leseauftrag.
   `ACTION_MODE_RESULT=01` bedeutet dagegen einen Fehler.
 - Androids `WifiNetworkSpecifier` fordert genau dieses lokale WLAN an.
   Die Anfrage bleibt für die Sitzungsdauer bestehen. Der DHCP-Gateway wird als
@@ -64,7 +79,7 @@ Abbrechen, erneutes Suchen und Schließen der Activity räumen BLE-/WLAN-Anfrage
 Die Protokollanalyse beruht auf einer statisch untersuchten Lab-APK 3.1.0,
 Versionscode 22. Sie beobachtet keine echte Kameraausführung. Herkunft,
 Prüfsummen, untersuchte Methoden und verbleibende Fragen stehen in
-[PROTOCOL_EVIDENCE_035.md](PROTOCOL_EVIDENCE_035.md).
+[PROTOCOL_EVIDENCE_036.md](PROTOCOL_EVIDENCE_036.md).
 
 Diese Implementierung verwendet ihre eigene App-ID und eine eigene
 App-Information. Ob jede S9-Firmware diese akzeptiert, muss am Gerät geprüft
@@ -76,8 +91,7 @@ bei dieser Untersuchung nicht vollständig erneut geprüft.
 Die automatischen Tests prüfen Suchergebnisse ohne Android-Bond, Berechtigungen,
 Byte-Fixtures, GATT-Reihenfolge und Fehler, WLAN-Anfragen, DHCP-Änderungen und
 Sitzungsverlust. Ein erfolgreicher Testlauf ersetzt den Kameratest nicht.
-Ergebnis: **186 Tests erfolgreich, Lint ohne Fehler, Test-APK gebaut**;
-Details unter [VALIDATION_035.md](VALIDATION_035.md).
+Die Prüfung der aktuellen Version steht unter [VALIDATION_036.md](VALIDATION_036.md).
 
 ## Build
 

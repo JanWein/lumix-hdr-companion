@@ -51,7 +51,7 @@ Names are embedded in raw `H5.a`; UUID-to-field binding is corroborated by `H5.d
 | APP_UUID | `bff12e7f-5944-4eb6-a90f-48d8786157ea` | Encoded UUID write |
 | APP_INFO | `ed8b1352-5aa7-4155-b7c9-521292dd1932` | Plain, fixed 32-byte application information |
 | FRIENDLY_NAME | `05a797b6-9c2f-4d18-99a7-fa61a3880bfe` | Encoded phone name write |
-| Unnamed initialization command | `36f99090-e79b-4060-9ac7-89f3f8bf88d5` | Single byte `02`, with response |
+| Conditional Wi-Fi compatibility command | `36f99090-e79b-4060-9ac7-89f3f8bf88d5` | Single byte `02`, with response, on the WPA2/Harmony path |
 | WIFI_SSID | `657edba2-5bc8-42dd-974f-21871d7dbcd1` | Plain UTF-8 read |
 | WIFI_PASSWORD | `42d509f7-f122-4816-92d1-5e402d9453cb` | Encoded read |
 | READ_WIFI_FREQUENCY_BAND | `419010c2-3a85-47d6-9e71-a1ea58ced881` | Read |
@@ -62,7 +62,7 @@ Names are embedded in raw `H5.a`; UUID-to-field binding is corroborated by `H5.d
 | AP_STATE | `dcba3a74-80bc-4919-8ef4-0c9f99cc20dd` | First notification byte `01` allows Wi-Fi join |
 | ACTION_MODE_RESULT | `6c875728-7636-425e-818a-f1d93a39e075` | First notification byte `01` follows Lab's failure path |
 
-The unnamed command's semantic label is unknown. Its value and position are observed; calling it an acceptance or pairing-status command would be an inference.
+The command's camera-side name is unknown. The renewed trace below establishes that it is conditional on the same capability branch as WPA2 selection. Calling it a universal registration completion, acceptance or pairing-status command is unsupported.
 
 ## Ordered registration exchange
 
@@ -72,7 +72,7 @@ The ordinary non-USB path in raw `z5.s1.run` chains `z5.S1`, `z5.d2`, `z5.c2`, `
 2. Write encoded APP_UUID **with response**. Lab creates a random UUID once, removes hyphens, persists it under `DATA_STORE_UUID`, converts the 32 hex digits into 16 raw bytes, packs and encodes those bytes.
 3. Write APP_INFO **with response**. Lab uses the ASCII text `LUMIX LUT Creators APP ` plus its version name, truncates to 32 bytes and zero-fills the remainder. A reconstructed client using its own identity follows the observed format, but acceptance of arbitrary application text is not established by static analysis.
 4. Write encoded FRIENDLY_NAME **with response**. Lab uses Android `Build.MODEL` as the source name. The same packing and encoding is applied.
-5. Write the single byte `02` to `36f99090-e79b-4060-9ac7-89f3f8bf88d5` **with response**. This is one byte with value two, not two zero bytes.
+5. **Conditional:** write the single byte `02` to `36f99090-e79b-4060-9ac7-89f3f8bf88d5` **with response** when the phone lacks WPA3-SAE support or Lab detects Huawei/Harmony. On a WPA3-capable non-Harmony phone, Lab skips this write. This is one byte with value two, not two zero bytes. The initial investigation established its value and order but had not resolved this condition; the renewed trace below corrects that omission.
 6. Read WIFI_SSID, WIFI_PASSWORD, READ_WIFI_FREQUENCY_BAND, CAMERA_DESTINATION, optionally CAMERA_DESTINATION_SUB, then CER_FINGER_PRINT. Lab subsequently marks Wi-Fi information as read and continues with other camera metadata.
 
 Stable auxiliary corroboration: `z5.S1_6d00211.java:21`, `z5.M1_6d00157.java:199`, `z5.e2_6d00440.java:32`, `z5.i2_6d004bc.java:23`, `z5.w1_6d0066d.java:17`, `z5.v1_6d0064e.java:17`. The fingerprint decoder is also in `z5.M1.c`, case 0.
@@ -101,6 +101,36 @@ AP_STATE first byte `01` permits the UI to join the camera WLAN after Wi-Fi info
 Corroborating auxiliary locations: `H5.d_2187a3.java:188`, `H5.d_2187a3.java:207`, `z5.o1_6d00575.java:21`, `z5.p2_6d00595.java:21`, `CameraWifiConnectFragment_746b2795.java:129` and `:531`.
 
 Hardware-dependent unknowns: camera confirmation timing, accepted third-party APP_INFO strings, S9 firmware differences, notifications/CCCD behavior, Wi-Fi activation latency, OS network permissions, and end-to-end HTTPS authentication. These require a user test with the S9; static reconstruction cannot verify them.
+
+## Renewed audit after the 0.3.5 connection report
+
+The user reports that the S9 appears in the scan but does not connect, with no error displayed. This makes post-selection diagnostics necessary; the static comparison alone cannot identify the exact stage reached on the user's phone.
+
+First-time pairing has now been traced independently: `CameraBluetoothConnectionPairingInProgressFragment.Q` schedules raw `z5.V.run` case 0, which creates the internal camera record, marks its application state `BLE_STATE_PAIRED`, then calls `z5.k2.i`. That method passes the device and advertised camera identity to `H5.j.d`. Service discovery subsequently enters the same `z5.s1.run` BLE exchange described above. The inspected first-time path does not introduce another pairing-only GATT write. The internal `BLE_STATE_PAIRED` assignment does not itself establish Android system bonding.
+
+Lab's Add Camera scan uses the second scan flag set to true, rejecting advertising status 0 and accepting the status-3 pairing path. Version 0.3.5's broader scanner does not preserve that distinction. This is a concrete UI eligibility difference; a causal link to the user's failure remains unproven.
+
+Two additional post-selection differences from baseline commit `c3460f0` were verified:
+
+- Lab enables notifications locally on every NOTIFY characteristic and starts the key read without CCCD writes. The 0.3.5 session instead queued descriptor writes for two characteristics before reading INITIAL_INFORM. Complete direct Bluetooth method-reference inventories of both DEX files contain neither `BluetoothGatt.writeDescriptor` nor `BluetoothDevice.createBond`. Reflection/native behavior remains outside that negative result's scope.
+- Lab waits 1,000 ms after the connected callback before requesting MTU 57. The 0.3.5 session requested it immediately. Matching the observed delay is a compatibility adjustment; hardware evidence is still needed to establish whether timing contributed to the failure.
+
+The renewed capability trace resolves the conditional command: raw `I5.c.f` returns `WifiManager.isWpa3SaeSupported()`, while raw `util.v.R0` detects Huawei/Harmony variants. Raw `z5.i2.run` skips `02` when WPA3 is supported and Harmony is not detected. `I5.c.b` uses that same predicate to choose `setWpa3Passphrase`; the other branch uses `setWpa2Passphrase`. Therefore 0.3.5's unconditional `02` and forced WPA2 differed from Lab's normal WPA3 path. The camera-side meaning “select WPA2 compatibility” is an inference from this correlated branch, not an embedded characteristic label.
+
+No evidence established an APP_INFO whitelist in camera firmware. Lab sends its own fixed application label; the camera's treatment of another label is unknown. This audit also found no independently verified fingerprint decoding defect: ordinary ASCII hexadecimal fingerprint data is compatible with the existing decoder. Omitted band/destination reads populate client metadata and subsequent capability branches; no camera-side requirement to read those values before authentication can be established from this client alone.
+
+New complete REA method Evidence records in ignored `.analysis/`:
+
+| Method | File | Evidence ID |
+| --- | --- | --- |
+| `z5.V.run` | `recheck-first-pairing-evidence.json` | `ev_7ad5be5c7a46ce5f3da3e7ed8c15e6298e7381ebabd24597907e1934c696c472` |
+| `z5.k2.i` | `recheck-connect-current-camera-evidence.json` | `ev_22fcc11fa8c1350d6fa97b4918c74b49f95c3956cda84105ebc7c7e067501e39` |
+| `H5.d.onServicesDiscovered` | `recheck-services-registration-evidence.json` | `ev_16da82db254e71f0aedc75fe82698e95ec7ecffe563b6e664c47400c3454b1c5` |
+| `H5.d.onConnectionStateChange` | `recheck-connection-state-evidence.json` | `ev_f591bef7d207170542401fad5b8ad78cebbfe8c9f75201cb0e14c5726e4f75c9` |
+| `I5.c.f` | `recheck-wpa3-capability-evidence.json` | `ev_94734b98d828ca30a54223a195ed8f46ac72514aa2a9db13949a970737354e16` |
+| `z5.i2.run` | `recheck-conditional-security-mode-evidence.json` | `ev_87b03156d1fee66ae892a5f25d399bc1c47518f3214584045304642d578a474d` |
+
+Each reports available Java source with complete delivery and no fallback markers. `.analysis/recheck-pairing-findings.json` links the source comparison, auxiliary decompilation and bounded negative results. The APK and tool identities remain unchanged.
 
 ## HTTPS authentication check
 

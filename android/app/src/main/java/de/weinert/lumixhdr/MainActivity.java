@@ -175,9 +175,11 @@ public final class MainActivity extends Activity {
     }
     private void toggleWatch(){if(tree==null){pickFolder();return;}watching=!watching;handler.removeCallbacks(tick);if(watching)handler.post(tick);renderSettings();}
     interface ThrowingRunnable{void run() throws Exception;}
-    private void execute(String label,ThrowingRunnable task){
-        if(busy){Toast.makeText(this,"Einen Moment, die Verarbeitung läuft noch.",Toast.LENGTH_SHORT).show();return;}busy=true;setBusy(label,true);
+    private boolean execute(String label,ThrowingRunnable task){
+        if(destroyed)return false;
+        if(busy){Toast.makeText(this,"Einen Moment, die Verarbeitung läuft noch.",Toast.LENGTH_SHORT).show();return false;}busy=true;setBusy(label,true);
         worker.execute(()->{try{task.run();}catch(Exception e){runOnUiThread(()->{if(!destroyed)showError(e);});}finally{runOnUiThread(()->{busy=false;if(!destroyed){setBusy("",false);renderSelection();}});}});
+        return true;
     }
     private void showError(Exception error){
         AlertDialog.Builder dialog=new AlertDialog.Builder(this);

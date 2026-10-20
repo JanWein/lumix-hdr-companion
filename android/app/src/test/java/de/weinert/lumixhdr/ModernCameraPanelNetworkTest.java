@@ -89,19 +89,19 @@ public class ModernCameraPanelNetworkTest {
     }
     @Test public void networkLostBeforeWorkerStartsDoesNotOpenConnection() throws Exception {
         select();connectivity.setNetworkCapabilities(cameraNetwork,null);
-        assertThrows(IOException.class,()->tasks.remove().run());
+        tasks.remove().run();
         assertEquals(0,CameraNetworkShadow.openCount);assertFalse(panel.isConnected());
     }
     @Test public void lossDuringAuthenticationCannotPublishEvenIfCapabilitiesReturn() throws Exception {
         int before=epoch();
         CameraNetworkShadow.beforeResponse=()->callback.onLost(cameraNetwork);
-        select();assertThrows(IOException.class,()->tasks.remove().run());
+        select();tasks.remove().run();
         assertTrue(epoch()>before);assertFalse(panel.isConnected());assertNull(field("pendingNetwork"));
         assertFalse(((TextView)field("state")).getText().toString().contains("ist verbunden"));
     }
     @Test public void postAuthenticationCheckRejectsLossBeforeCallbackArrives() throws Exception {
         CameraNetworkShadow.beforeResponse=()->connectivity.setNetworkCapabilities(cameraNetwork,null);
-        select();assertThrows(IOException.class,()->tasks.remove().run());
+        select();tasks.remove().run();
         assertFalse(panel.isConnected());assertNull(field("network"));assertNull(field("pendingNetwork"));
     }
     @Test public void explicitDisconnectClearsNetworkAndSession() throws Exception {

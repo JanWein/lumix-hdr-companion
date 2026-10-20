@@ -3,6 +3,8 @@ package de.weinert.lumixhdr;
 import android.content.Context;
 import android.net.*;
 import android.net.wifi.WifiNetworkSpecifier;
+import android.net.wifi.WifiManager;
+import android.net.wifi.WifiConfiguration;
 import android.os.*;
 import org.junit.*;
 import org.junit.runner.RunWith;
@@ -23,21 +25,30 @@ import static org.robolectric.util.ReflectionHelpers.ClassParameter.from;
 public class CameraWifiConnectorTest {
     private CameraWifiConnector connector;
     private CapturingConnectivity connectivity;
+    private ShadowWifiManager wifi;
     private final List<Network> connected=new ArrayList<>();
     private final List<String> gateways=new ArrayList<>(),errors=new ArrayList<>();
+    private final List<String> diagnostics=new ArrayList<>();
     private int lost;
     @Before public void setUp(){
         connectivity=(CapturingConnectivity)shadowOf((ConnectivityManager)RuntimeEnvironment.getApplication().getSystemService(Context.CONNECTIVITY_SERVICE));
         connectivity.denied=false;
+        wifi=shadowOf((WifiManager)RuntimeEnvironment.getApplication().getSystemService(Context.WIFI_SERVICE));wifi.setWpa3SaeSupported(false);
+        ReflectionHelpers.setStaticField(Build.class,"MANUFACTURER","Google");ReflectionHelpers.setStaticField(Build.class,"BRAND","google");
         connector=new CameraWifiConnector(RuntimeEnvironment.getApplication(),new CameraWifiConnector.Callback(){
             public void connected(Network n,String gateway){connected.add(n);gateways.add(gateway);}
             public void lost(){lost++;}
             public void error(String message){errors.add(message);}
+            public void diagnostic(String event,int value){diagnostics.add(event+"="+value);}
         });
     }
     @After public void tearDown(){connector.close();}
     private void connect(){connector.connect("LUMIX-S9","testpassword");}
     private ConnectivityManager.NetworkCallback observer(){return connectivity.getNetworkCallbacks().iterator().next();}
+    private WifiConfiguration requestedConfiguration(){
+        NetworkCapabilities caps=ReflectionHelpers.getField(connectivity.request,"networkCapabilities");
+        WifiNetworkSpecifier spec=ReflectionHelpers.callInstanceMethod(caps,"getNetworkSpecifier");return ReflectionHelpers.getField(spec,"wifiConfiguration");
+    }
     private LinkProperties routes() throws Exception {
         LinkProperties properties=new LinkProperties();
         ReflectionHelpers.callInstanceMethod(properties,"setInterfaceName",from(String.class,"wlan0"));
@@ -88,6 +99,41 @@ public class CameraWifiConnectorTest {
     }
     @Test public void permissionDenialIsReportedWithoutLeavingRequest(){
         connectivity.denied=true;connect();assertEquals(1,errors.size());assertTrue(errors.get(0).contains("Freigabe"));assertTrue(connectivity.getNetworkCallbacks().isEmpty());
+    }
+    @Test public void selectsWpa3OnSupportedOrdinaryAndroidPhone(){
+        wifi.setWpa3SaeSupported(true);assertTrue(CameraWifiConnector.prefersWpa3(RuntimeEnvironment.getApplication()));connect();
+        assertTrue(requestedConfiguration().allowedKeyManagement.get(WifiConfiguration.KeyMgmt.SAE));assertTrue(diagnostics.contains("wifi.security=3"));
+    }
+    @Test public void selectsWpa2OnPhoneWithoutSaeSupport(){
+        assertFalse(CameraWifiConnector.prefersWpa3(RuntimeEnvironment.getApplication()));connect();
+        assertTrue(requestedConfiguration().allowedKeyManagement.get(WifiConfiguration.KeyMgmt.WPA_PSK));assertTrue(diagnostics.contains("wifi.security=2"));
+    }
+    @Test public void selectsWpa2ForHarmonyCompatibilityEvenWithSaeHardware(){
+        wifi.setWpa3SaeSupported(true);ReflectionHelpers.setStaticField(Build.class,"MANUFACTURER","HUAWEI");ReflectionHelpers.setStaticField(Build.class,"BRAND","HMS");
+        assertFalse(CameraWifiConnector.prefersWpa3(RuntimeEnvironment.getApplication()));connect();
+        assertTrue(requestedConfiguration().allowedKeyManagement.get(WifiConfiguration.KeyMgmt.WPA_PSK));assertTrue(diagnostics.contains("wifi.security=2"));
+    }
+    @Test public void recognizesObservedHarmonyIndicatorsWithoutRequiringVendorClasses(){
+        assertFalse(CameraWifiConnector.harmonyCompatibility("Google","google","linux","ART","",""));
+        assertTrue(CameraWifiConnector.harmonyCompatibility("HUAWEI","HMS",null,null,null,null));
+        assertTrue(CameraWifiConnector.harmonyCompatibility(null,null,"kernel-harmony",null,null,null));
+        assertTrue(CameraWifiConnector.harmonyCompatibility(null,null,null,"Harmony VM",null,null));
+        assertTrue(CameraWifiConnector.harmonyCompatibility(null,null,null,null,"true",null));
+        assertTrue(CameraWifiConnector.harmonyCompatibility(null,null,null,null,null,"Harmony"));
+        assertFalse(CameraWifiConnector.harmonyCompatibility("HUAWEI","HUAWEI",null,null,"false",null));
+    }
+    @Test public void onLinkOnlyNetworkDoesNotGuessCameraAddressAndHasBoundedTimeout() throws Exception {
+        connect();Network n=ShadowNetwork.newInstance(60);ConnectivityManager.NetworkCallback cb=observer();cb.onAvailable(n);
+        LinkProperties properties=new LinkProperties();ReflectionHelpers.callInstanceMethod(properties,"setInterfaceName",from(String.class,"wlan0"));
+        RouteInfo route=ReflectionHelpers.callConstructor(RouteInfo.class,from(IpPrefix.class,new IpPrefix(InetAddress.getByName("192.168.54.0"),24)),from(InetAddress.class,InetAddress.getByName("0.0.0.0")),from(String.class,"wlan0"));
+        ReflectionHelpers.callInstanceMethod(properties,"addRoute",from(RouteInfo.class,route));cb.onLinkPropertiesChanged(n,properties);
+        assertTrue(connected.isEmpty());assertTrue(diagnostics.contains("wifi.available=1"));assertTrue(diagnostics.contains("wifi.dhcp=0"));
+        shadowOf(Looper.getMainLooper()).idleFor(Duration.ofSeconds(45));assertEquals(1,errors.size());assertTrue(connectivity.getNetworkCallbacks().isEmpty());
+    }
+    @Test public void wifiDiagnosticsNeverContainSsidPasswordOrCameraAddress() throws Exception {
+        connect();Network n=ShadowNetwork.newInstance(60);ConnectivityManager.NetworkCallback cb=observer();cb.onAvailable(n);cb.onLinkPropertiesChanged(n,routes());cb.onLost(n);
+        String log=String.join("\n",diagnostics);assertTrue(log.contains("wifi.dhcp=1"));assertTrue(log.contains("wifi.lost=1"));
+        for(String secret:new String[]{"LUMIX-S9","testpassword","192.168.54.1"})assertFalse(secret,log.contains(secret));
     }
     @Implements(ConnectivityManager.class)
     public static class CapturingConnectivity extends ShadowConnectivityManager {
