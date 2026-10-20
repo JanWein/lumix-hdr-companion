@@ -1,0 +1,18 @@
+{
+  "androidTests": 43,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "pythonTestsPassed": 8,
+  "lintErrors": 0,
+  "lintWarnings": 11,
+  "oldDemoRegressionCovered": true,
+  "apkDemoAssetsMatchCorrectedSource": true,
+  "demoPixelsUnchanged": true,
+  "apk": "Lumix_HDR_Companion_0.3.1_Android_ARM64.apk",
+  "sha256": "0b11d84e8db91a71fc3f771af5e6c1ac6bc4d22fec451bef052e14f824ff63d4",
+  "versionCode": 4,
+  "versionName": "0.3.1",
+  "nativeAndroidHdrRun": false,
+  "s9Tested": false
+}

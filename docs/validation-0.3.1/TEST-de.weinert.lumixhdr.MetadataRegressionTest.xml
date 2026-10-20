@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="de.weinert.lumixhdr.MetadataRegressionTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-20T05:55:37.149Z" hostname="33f8b0f270f4" time="2.126">
+  <properties/>
+  <testcase name="varyingIsoStillRejectsRadianceReconstruction" classname="de.weinert.lumixhdr.MetadataRegressionTest" time="1.998"/>
+  <testcase name="shippedDemoCanBeReadByTheActualAndroidExifParser" classname="de.weinert.lumixhdr.MetadataRegressionTest" time="0.033"/>
+  <testcase name="missingRealExposureDataIsNotInventedAndDoesNotLeakCacheFilename" classname="de.weinert.lumixhdr.MetadataRegressionTest" time="0.035"/>
+  <testcase name="manualHdrDoesNotRequireGroupingTimestampOrBias" classname="de.weinert.lumixhdr.MetadataRegressionTest" time="0.029"/>
+  <testcase name="exactOldDemoStillWorksForManualHdrDespiteRejectedBiasTag" classname="de.weinert.lumixhdr.MetadataRegressionTest" time="0.029"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
