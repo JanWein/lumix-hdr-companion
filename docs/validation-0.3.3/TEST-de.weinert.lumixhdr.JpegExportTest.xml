@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="de.weinert.lumixhdr.JpegExportTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-20T08:47:48.227Z" hostname="33f8b0f270f4" time="0.016">
+  <properties/>
+  <testcase name="blackAndInvalidRadianceAreHandledExplicitly" classname="de.weinert.lumixhdr.JpegExportTest" time="0.007"/>
+  <testcase name="toneMappingIsInvariantToGlobalRadianceScale" classname="de.weinert.lumixhdr.JpegExportTest" time="0.0"/>
+  <testcase name="toneMappingRetainsHighlightOrderingAndBounds" classname="de.weinert.lumixhdr.JpegExportTest" time="0.0"/>
+  <testcase name="resultIndexIncludesHdrWithoutPreviewAndPairsExistingJpeg" classname="de.weinert.lumixhdr.JpegExportTest" time="0.004"/>
+  <testcase name="jpegOnlyResultStillExportsAndNonImagesAreIgnored" classname="de.weinert.lumixhdr.JpegExportTest" time="0.001"/>
+  <testcase name="hdrHeaderAcceptsAppDimensionsAndRejectsOversizedOrCorruptFiles" classname="de.weinert.lumixhdr.JpegExportTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
