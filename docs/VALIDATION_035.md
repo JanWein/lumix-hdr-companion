@@ -5,7 +5,10 @@ Build-Umgebung: Windows, JDK 21.0.9, Gradle 8.11.1, Android Gradle Plugin
 
 ## Automatische Tests
 
-`testDebugUnitTest`: **118 Tests, 0 Fehler, 0 fehlgeschlagene Tests**.
+`testDebugUnitTest`: **186 Tests, 0 Fehler, 0 fehlgeschlagene Tests**.
+Der abschließende Veröffentlichungsbuild integriert den vollständigen aktuellen
+0.3.4-Projektstand einschließlich seiner 68 bisherigen Tests und die 118 neuen
+Verbindungstests.
 
 | Testklasse | Ausgeführte Fälle | Schwerpunkt |
 | --- | ---: | --- |
@@ -15,14 +18,30 @@ Build-Umgebung: Windows, JDK 21.0.9, Gradle 8.11.1, Android Gradle Plugin
 | CameraWifiConnectorTest | 18 | Lokale WLAN-Anfrage, DHCP-Routen, Lebensdauer und Netzverlust |
 | LumixBleCodecTest | 12 | Feste Byte-Fixtures, Längen, ungültige Daten |
 | ModernCameraPanelNetworkTest | 20 | Token-/Sitzungsverlust, veraltete Anmeldung, WLAN ohne Internet |
+| BracketRulesTest | 8 | Bestehende Regeln für Belichtungsreihen |
+| JpegExportTest | 6 | JPEG-Export |
+| LumixLabClientTest | 22 | HTTPS, eigene Identität, Zertifikatspin, Medien-Übertragung |
+| MetadataRegressionTest | 5 | Bildmetadaten |
+| ResultDeleteTest | 6 | Ergebnisdateien und Pfadprüfung |
+| ResultNamesTest | 3 | Ergebnisnamen |
+| StudioUiTest | 18 | Studio, Export, Löschen, Umbenennen und Oberfläche |
 
 Robolectric prüft die Android-Fälle auf API 29 und 35; die Berechtigungstests
-zusätzlich auf API 31. Codec-Tests laufen als gewöhnliche JVM-Tests.
+zusätzlich auf API 31. Die bisherigen UI-/Metadaten-/Exporttests verwenden
+API 34. Codec- und Dateiregeltests laufen als gewöhnliche JVM-Tests.
 
 Beim ersten Lauf enthielt der WLAN-Testaufbau eine Route für `wlan0`, deren
 `LinkProperties` noch keinen Schnittstellennamen hatten. Dieser Testaufbau
 wurde korrigiert; der danach ausgeführte vollständige Lauf enthält auch die
 zusätzlichen BLE-Sitzungstests und war erfolgreich.
+
+Vor dem GitHub-Push wurde der inzwischen vervollständigte `main` integriert.
+Dessen Regressionstests zeigten unter Windows, dass kanonische Dateipfade eine
+symbolische Verknüpfung beibehalten können. Die Löschprüfung lehnt solche
+Verknüpfungen jetzt ausdrücklich ab. Die UI-Testhilfe verarbeitet zudem den
+Dialogklick vor dem Warten auf Hintergrundaufgaben. Nach diesen Korrekturen
+bestand der gesamte Lauf mit 186 Tests; `assembleDebug` und `lintDebug` waren
+ebenfalls erfolgreich.
 
 Die XML-Ergebnisse liegen lokal unter
 `android/app/build/test-results/testDebugUnitTest/`.
@@ -43,7 +62,7 @@ Die kopierte ARM64-Testdatei ist
 SHA-256:
 
 ```text
-43f63ab34d76cc8fc603662c0dad25a697fa47b6e3202c0e8e3886945ccabd11
+6842d52f16c5b9242a620daf45a56cdd7ef7fe8ec7d00253133d56ce64722ef9
 ```
 
 `apksigner verify --verbose` erfolgreich: ein Signierer, APK-Signaturschema v2.

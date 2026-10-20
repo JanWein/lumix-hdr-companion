@@ -76,14 +76,13 @@ bei dieser Untersuchung nicht vollständig erneut geprüft.
 Die automatischen Tests prüfen Suchergebnisse ohne Android-Bond, Berechtigungen,
 Byte-Fixtures, GATT-Reihenfolge und Fehler, WLAN-Anfragen, DHCP-Änderungen und
 Sitzungsverlust. Ein erfolgreicher Testlauf ersetzt den Kameratest nicht.
-Ergebnis: **118 Tests erfolgreich, Lint ohne Fehler, Test-APK gebaut**;
+Ergebnis: **186 Tests erfolgreich, Lint ohne Fehler, Test-APK gebaut**;
 Details unter [VALIDATION_035.md](VALIDATION_035.md).
 
 ## Build
 
-Der geklonte Stand enthielt weder die vom Startskript benötigten
-`gradle/wrapper`-Dateien noch die im Manifest referenzierte XML-Theme-Ressource.
-Beides wurde ergänzt. Gradle 8.11.1 ist mit Prüfsumme fixiert; benötigt werden
+Gradle 8.11.1 ist mit Prüfsumme fixiert; der Wrapper ist auch auf Unix ausführbar.
+Der vollständige bisherige Projektstand ist in diese Version integriert. Benötigt werden
 JDK 17 oder 21 und Android SDK 35. SDK-Pfade bleiben in der ignorierten
 `android/local.properties` oder in `ANDROID_HOME`.
 

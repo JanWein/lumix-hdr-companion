@@ -15,7 +15,7 @@ erscheint „Verbunden“.
 
 Anleitung, Build und Grenzen: [S9-Verbindung](docs/S9_CONNECTION.md).
 Statische Belege: [Protokollanalyse 0.3.5](docs/PROTOCOL_EVIDENCE_035.md).
-Prüfung: [118 Tests erfolgreich, Lint ohne Fehler, APK gebaut](docs/VALIDATION_035.md).
+Prüfung: [186 Tests erfolgreich, Lint ohne Fehler, APK gebaut](docs/VALIDATION_035.md).
 **Ein vollständiger Test an einer echten S9 steht noch aus.**
 
 Native Android-App und Python-Desktop-Anwendung für lokale HDR-Verarbeitung.
