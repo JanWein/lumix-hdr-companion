@@ -1,1 +1,2 @@
 6b902bc66c6a09b7b12b5d38637849b8d11cd26fb7a9ce20f32969e655516bc7  Lumix_HDR_Companion_0.3.4_Android_ARM64.apk
+6842d52f16c5b9242a620daf45a56cdd7ef7fe8ec7d00253133d56ce64722ef9  lumix-hdr-companion-0.3.5-arm64-debug.apk

@@ -230,6 +230,7 @@ public final class MainActivity extends Activity {
     }
     @Override public void onSaveInstanceState(Bundle state){super.onSaveInstanceState(state);ArrayList<String> paths=new ArrayList<>();for(File f:prepared)paths.add(f.getPath());state.putStringArrayList("selected",paths);state.putInt("tab",currentTab);if(pendingJpeg!=null)state.putString("export_jpeg",pendingJpeg.getPath());if(latestHdr!=null)state.putString("export_hdr",latestHdr.getPath());}
     @Override public void onBackPressed(){if(currentTab!=0){showTab(0);return;}super.onBackPressed();}
+    @Override public void onRequestPermissionsResult(int requestCode,String[] permissions,int[] results){super.onRequestPermissionsResult(requestCode,permissions,results);if(camera!=null)camera.onPermissionsResult(requestCode);}
     @Override protected void onResume(){super.onResume();resumed=true;if(camera!=null)camera.refreshConnection();if(watching){handler.removeCallbacks(tick);handler.post(tick);}}
     @Override protected void onPause(){super.onPause();resumed=false;handler.removeCallbacks(tick);}
     @Override protected void onDestroy(){destroyed=true;watching=false;handler.removeCallbacks(tick);if(camera!=null)camera.close();worker.shutdownNow();super.onDestroy();}

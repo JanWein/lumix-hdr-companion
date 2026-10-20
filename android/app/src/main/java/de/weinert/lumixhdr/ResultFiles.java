@@ -33,7 +33,8 @@ final class ResultFiles {
             throw new IOException("Das Bild konnte nicht vollständig gelöscht werden. Bitte versuche es erneut.");
     }
     private static void validate(File parent,File file,String extension) throws IOException {
-        if(file==null||!parent.equals(file.getCanonicalFile().getParentFile())||
+        // Windows canonical paths can retain a symlink rather than resolving its target.
+        if(file==null||java.nio.file.Files.isSymbolicLink(file.toPath())||!parent.equals(file.getCanonicalFile().getParentFile())||
                 !file.getName().toLowerCase(Locale.ROOT).endsWith(extension)||
                 (file.exists()&&!file.isFile()))
             throw new IOException("Diese Datei kann nicht aus der Bilderübersicht gelöscht werden.");

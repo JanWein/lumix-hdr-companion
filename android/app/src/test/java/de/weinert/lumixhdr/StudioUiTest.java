@@ -135,6 +135,8 @@ public class StudioUiTest {
     }
     private AlertDialog openRename(){assertTrue(root().findViewWithTag("rename-result").performClick());AlertDialog dialog=org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog();assertNotNull(dialog);Shadows.shadowOf(Looper.getMainLooper()).idle();assertTrue(dialog.isShowing());return dialog;}
     private void awaitWorker() throws Exception {
+        // AlertDialog buttons post their click message before scheduling background work.
+        Shadows.shadowOf(Looper.getMainLooper()).idle();
         java.lang.reflect.Field field=MainActivity.class.getDeclaredField("worker");field.setAccessible(true);((java.util.concurrent.ExecutorService)field.get(activity)).submit(()->{}).get(10,java.util.concurrent.TimeUnit.SECONDS);Shadows.shadowOf(Looper.getMainLooper()).idle();
     }
     private View findDescription(View node,String label){if(label.equals(node.getContentDescription()))return node;if(node instanceof ViewGroup){ViewGroup g=(ViewGroup)node;for(int i=0;i<g.getChildCount();i++){View found=findDescription(g.getChildAt(i),label);if(found!=null)return found;}}return null;}
