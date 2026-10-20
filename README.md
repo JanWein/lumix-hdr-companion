@@ -25,7 +25,7 @@ Android-Build mit JDK 17 und installiertem Android-SDK 35:
 
 ```bash
 cd android
-./gradlew testDebugUnitTest lintDebug assembleDebug
+bash gradlew testDebugUnitTest lintDebug assembleDebug
 ```
 
 Unter Windows `gradlew.bat` verwenden. Alternativ `android/` in Android Studio
@@ -207,7 +207,7 @@ Android: den Ordner `android` in Android Studio öffnen, JDK 17, Android SDK 35 
 
 ```bash
 cd android
-./gradlew testDebugUnitTest lintDebug assembleDebug
+bash gradlew testDebugUnitTest lintDebug assembleDebug
 ```
 
 Kein Panasonic-Code wird mitgeliefert. Das Projekt steht unter MIT; Abhängigkeiten haben eigene Lizenzen. Siehe [Quellen](docs/SOURCES.md) und [Validierung](docs/VALIDATION.md).
