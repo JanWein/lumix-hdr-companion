@@ -70,7 +70,7 @@ public final class LumixLabClient {
     }
     public void authenticate(String uuid,String friendlyName) throws Exception {
         disconnect();if(!uuid.matches("[a-fA-F0-9]{32}"))throw new IOException("Eigene App-UUID muss aus 32 Hex-Zeichen bestehen");
-        JSONObject body=new JSONObject().put("AppInfo","Lumix HDR Companion 0.2").put("Uuid",uuid).put("FriendlyName",friendlyName);
+        JSONObject body=new JSONObject().put("AppInfo","Lumix HDR Companion 0.3.5").put("Uuid",uuid).put("FriendlyName",friendlyName);
         JSONObject data=json("auth",body,false).optJSONObject("Data");
         Object raw=data==null?null:data.opt("AuthToken");String next=raw instanceof String?(String)raw:null;authorization(next);token=next;
     }

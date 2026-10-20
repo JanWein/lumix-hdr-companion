@@ -1,4 +1,26 @@
-# Lumix HDR Companion 0.3.4
+# Lumix HDR Companion 0.3.5
+
+## S9-Verbindung korrigiert: zuerst Bluetooth, dann WLAN
+
+Die Kameraeinrichtung sucht jetzt tatsächlich per BLE nach der S9. Zuvor wurden
+nur bereits in Android gekoppelte Geräte aufgelistet. Die App führt nun die aus
+LUMIX Lab 3.1.0 abgeleitete Anmeldung mit eigener App-ID durch, liest WLAN-Daten
+und Zertifikatsfingerabdruck und öffnet Androids Kamera-WLAN-Verbindungsdialog.
+WLAN-Verlust beendet auch die zugehörige Sitzung.
+
+An der Kamera **Bluetooth → Kopplung → Neues Gerät hinzufügen** wählen, dann
+in der App **Kamera → Kamera suchen**. Android-Berechtigungen sowie die
+Kopplungs-/WLAN-Abfragen bestätigen. Erst nach erfolgreicher HTTPS-Anmeldung
+erscheint „Verbunden“.
+
+Anleitung, Build und Grenzen: [S9-Verbindung](docs/S9_CONNECTION.md).
+Statische Belege: [Protokollanalyse 0.3.5](docs/PROTOCOL_EVIDENCE_035.md).
+Prüfung: [118 Tests erfolgreich, Lint ohne Fehler, APK gebaut](docs/VALIDATION_035.md).
+**Ein vollständiger Test an einer echten S9 steht noch aus.**
+
+Der folgende Überblick stammt aus dem veröffentlichten 0.3.4-Stand. Das
+Git-Repository enthält derzeit den Android-Teil; mehrere dort erwähnte ältere
+Dokumentationen sowie das Python-Paket fehlen im veröffentlichten Quellbaum.
 
 Native Android-App und Python-Desktop-Anwendung für lokale HDR-Verarbeitung.
 Das öffentliche Projekt umfasst Quellcode, Tests, Dokumentation, synthetische
@@ -32,12 +54,12 @@ Unter Windows `gradlew.bat` verwenden. Alternativ `android/` in Android Studio
 öffnen. Der TLS-Test erzeugt mit dem JDK-Werkzeug `keytool` einen temporären
 Testschlüssel; private Schlüsseldateien werden nicht mitgeliefert. Den eigenen SDK-Pfad lokal über `ANDROID_HOME` oder `local.properties`
 setzen. Signierschlüssel und lokale Einstellungen gehören nicht ins Repository.
-Die veröffentlichte APK ist ein Debug-Prototyp für Android 10 oder neuer (ARM64).
+Der Android-Build ist ein Debug-Prototyp für Android 10 oder neuer (ARM64).
 Ein eigener Build verwendet den lokalen Debug-Schlüssel und kann eine mit einem
 anderen Schlüssel installierte APK nicht direkt ersetzen.
 
 Python-Installation und Nutzung sind weiter unten beschrieben. Prüfungen:
-`python -m pytest -q`. Die Android-App ist Version 0.3.4; das unabhängige Python-
+`python -m pytest -q`. Die Android-App ist Version 0.3.5; das unabhängige Python-
 Paket behält seine Version 0.1.0.
 
 
@@ -95,7 +117,7 @@ Anmeldung mit eigener App-ID und Token, Prüfung des Kamerazertifikats, optional
 BLE-Fingerabdrucklesen, Kameraeinstellungen und Auslösen, Galerieauswahl und
 JPEG-Downloads in geprüften Teilstücken direkt an die bestehende HDR-Verarbeitung.
 
-**Die eigene vollständige BLE-Registrierung und ein erfolgreicher S9-Lauf sind noch offen.**
+**BLE-Registrierung und WLAN-Übergabe sind ab 0.3.5 implementiert; ein erfolgreicher S9-Lauf ist noch offen.**
 Eine App-Kopplung mit LUMIX Lab registriert nicht automatisch diese App.
 
 Die vollständige Anleitung steht in [Android 0.2](docs/ANDROID_02.md), die statischen
@@ -114,7 +136,7 @@ Belege in [Protokollherkunft](docs/PROTOCOL_EVIDENCE_02.md).
 
 ## Was noch nicht nachgewiesen ist
 
-**Der WLAN-Zugriff auf eine echte S9 wurde nicht getestet.** Die neue HTTPS-Anbindung implementiert die gefundenen Nachrichten und eine eigene Token-Anmeldung. Ohne kameraseitig akzeptierte Registrierung der eigenen App kann die Anmeldung scheitern. Die frühere HTTP-/UPnP-Anbindung ist separat als Legacy-Test erhalten. Es gibt keinen automatischen Protokollwechsel und keine Übernahme einer fremden Lab-Identität.
+**Der WLAN-Zugriff auf eine echte S9 wurde nicht getestet.** Die HTTPS-Anbindung implementiert die gefundenen Nachrichten und eine eigene Token-Anmeldung. Version 0.3.5 ergänzt die BLE-Registrierung der eigenen App und die WLAN-Übergabe; die kameraseitige Annahme bleibt am Gerät zu prüfen. Die frühere HTTP-/UPnP-Anbindung ist separat als Legacy-Test erhalten. Es gibt keinen automatischen Protokollwechsel und keine Übernahme einer fremden Lab-Identität.
 
 **Das proprietäre LUMIX SDK ist nicht enthalten oder angebunden.** Panasonic veröffentlicht es für Windows als DLL/Header und verlangt für den Download Modell und Kameraseriennummer. Eine Linux- oder Android-Version ist in der offiziellen Quelle nicht veröffentlicht. Deshalb ruft dieses Projekt keine erfundenen DLL-Funktionen auf. Bereits über LUMIX Tether oder die SDK-Beispielanwendung in einem PC-Ordner gespeicherte JPEGs kann der Watcher verarbeiten; auch dieser Übergabeschritt muss mit der S9 geprüft werden. Siehe [SDK und Android](docs/SDK_ANDROID.md).
 
