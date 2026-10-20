@@ -1,0 +1,15 @@
+{
+  "tests": 52,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "lintErrors": 0,
+  "lintWarnings": 12,
+  "jpegSaveDialogAndCopyVerifiedInRobolectric": true,
+  "toneMappingAndHdrIndexVerified": true,
+  "nativeHdrConversionOnDeviceTested": false,
+  "apk": "Lumix_HDR_Companion_0.3.2_Android_ARM64.apk",
+  "sha256": "3438364a424bac8d9026a43adc258e50c073176d4f6a18981c3f0c2f0660097d",
+  "versionName": "0.3.2",
+  "versionCode": 5
+}
