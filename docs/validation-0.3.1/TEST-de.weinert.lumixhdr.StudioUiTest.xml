@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="de.weinert.lumixhdr.StudioUiTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-20T05:55:39.287Z" hostname="33f8b0f270f4" time="7.84">
+  <properties/>
+  <testcase name="selectionIsRestoredWithoutStartingProcessing" classname="de.weinert.lumixhdr.StudioUiTest" time="5.32"/>
+  <testcase name="completeSelectionWaitsForExplicitCreate" classname="de.weinert.lumixhdr.StudioUiTest" time="0.724"/>
+  <testcase name="firstScreenHasOnePrimaryImportAndNoProtocolFields" classname="de.weinert.lumixhdr.StudioUiTest" time="0.26"/>
+  <testcase name="settingsStayOutsideTheMainFlow" classname="de.weinert.lumixhdr.StudioUiTest" time="0.26"/>
+  <testcase name="narrowScreenWithLargeTypeKeepsPrimaryActionReachable" classname="de.weinert.lumixhdr.StudioUiTest" time="0.236"/>
+  <testcase name="actualHdrActionWithMissingMetadataOffersExplicitJpegRecovery" classname="de.weinert.lumixhdr.StudioUiTest" time="0.525"/>
+  <testcase name="darkAppearanceRenders" classname="de.weinert.lumixhdr.StudioUiTest" time="0.253"/>
+  <testcase name="navigationKeepsCameraAndEmptyResultsReachable" classname="de.weinert.lumixhdr.StudioUiTest" time="0.261"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+Invalid ID 0x00000000.
+]]></system-err>
+</testsuite>

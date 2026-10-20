@@ -18,15 +18,11 @@ Statische Belege: [Protokollanalyse 0.3.5](docs/PROTOCOL_EVIDENCE_035.md).
 Prüfung: [118 Tests erfolgreich, Lint ohne Fehler, APK gebaut](docs/VALIDATION_035.md).
 **Ein vollständiger Test an einer echten S9 steht noch aus.**
 
-Der folgende Überblick stammt aus dem veröffentlichten 0.3.4-Stand. Das
-Git-Repository enthält derzeit den Android-Teil; mehrere dort erwähnte ältere
-Dokumentationen sowie das Python-Paket fehlen im veröffentlichten Quellbaum.
-
 Native Android-App und Python-Desktop-Anwendung für lokale HDR-Verarbeitung.
 Das öffentliche Projekt umfasst Quellcode, Tests, Dokumentation, synthetische
 Beispielbilder und die bisherigen Prüfberichte.
 
-**[Android-APK und Quellarchiv herunterladen](../../releases/tag/v0.3.4)**
+**[Android-APK und Quellarchiv herunterladen](../../releases/tag/v0.3.5)**
 
 ![Bilder mit eigenem Namen](docs/validation-0.3.4/images-renamed.png)
 
@@ -47,7 +43,7 @@ Android-Build mit JDK 17 und installiertem Android-SDK 35:
 
 ```bash
 cd android
-./gradlew testDebugUnitTest lintDebug assembleDebug
+bash gradlew testDebugUnitTest lintDebug assembleDebug
 ```
 
 Unter Windows `gradlew.bat` verwenden. Alternativ `android/` in Android Studio
@@ -229,7 +225,7 @@ Android: den Ordner `android` in Android Studio öffnen, JDK 17, Android SDK 35 
 
 ```bash
 cd android
-./gradlew testDebugUnitTest lintDebug assembleDebug
+bash gradlew testDebugUnitTest lintDebug assembleDebug
 ```
 
 Kein Panasonic-Code wird mitgeliefert. Das Projekt steht unter MIT; Abhängigkeiten haben eigene Lizenzen. Siehe [Quellen](docs/SOURCES.md) und [Validierung](docs/VALIDATION.md).

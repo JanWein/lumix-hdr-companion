@@ -1,0 +1,16 @@
+{
+  "tests": 30,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "apk": "Lumix_HDR_Companion_0.2_Android_ARM64.apk",
+  "sha256": "8332fa29acc200e72ee98a31552e32f41e430d0bbf764d216adc071218082e31",
+  "applicationId": "de.weinert.lumixhdr",
+  "versionCode": 2,
+  "versionName": "0.2.0-prototype",
+  "minSdk": 29,
+  "targetSdk": 35,
+  "hardwareTested": false,
+  "emulatorTested": false,
+  "signingCertificateMatchesV01": true
+}

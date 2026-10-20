@@ -1,0 +1,96 @@
+/workspace/scratch/3b73f270b7cd/app_v03/lumix-hdr/android/app/src/main/java/de/weinert/lumixhdr/CameraTrust.java:38: Warning: Implementing a custom X509TrustManager is error-prone and likely to be insecure. It is likely to disable certificate validation altogether, and is non-trivial to implement correctly without calling Android's default implementation. [CustomX509TrustManager]
+        X509TrustManager trust=new X509TrustManager(){
+                                   ~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "CustomX509TrustManager":
+   This check looks for custom X509TrustManager implementations.
+
+   https://goo.gle/CustomX509TrustManager
+
+/workspace/scratch/3b73f270b7cd/app_v03/lumix-hdr/android/app/src/main/AndroidManifest.xml:8: Warning: The attribute android:allowBackup is deprecated from Android 12 and higher and may be removed in future versions. Consider adding the attribute android:dataExtractionRules specifying an @xml resource which configures cloud backups and device transfers on Android 12 and higher. [DataExtractionRules]
+        android:allowBackup="false" android:supportsRtl="true" android:usesCleartextTraffic="true">
+                             ~~~~~
+
+   Explanation for issues of type "DataExtractionRules":
+   Before Android 12, the attributes android:allowBackup and
+   android:fullBackupContent were used to configure all forms of backup,
+   including cloud backups, device-to-device transfers and adb backup.
+
+   In Android 12 and higher, these attributes have been deprecated and will
+   only apply to cloud backups. You should instead use the attribute
+   android:dataExtractionRules, specifying an @xml resource that configures
+   which files to back up, for cloud backups and for device-to-device
+   transfers, separately. If your minSdkVersion supports older versions,
+   you'll still want to specify an android:fullBackupContent resource if the
+   default behavior is not right for your app.
+
+   https://developer.android.com/about/versions/12/backup-restore#xml-changes
+   https://goo.gle/DataExtractionRules
+
+/workspace/scratch/3b73f270b7cd/app_v03/lumix-hdr/android/app/src/main/java/de/weinert/lumixhdr/MainActivity.java:156: Warning: Avoid object allocations during draw/layout operations (preallocate and reuse instead) [DrawAllocation]
+        @Override protected void onDraw(Canvas c){float s=Math.min(getWidth()/280f,getHeight()/144f);c.save();c.translate((getWidth()-280*s)/2,0);c.scale(s,s);for(int i=0;i<3;i++){c.save();c.rotate((i-1)*10,140,78);float x=70+i*9,y=22+i*3;p.setStyle(Paint.Style.FILL);p.setColor(Color.parseColor(ui.dark?new String[]{"#273142","#394A63","#A2BCDF"}[i]:new String[]{"#CDD8E9","#9BB5DB","#EDF3FE"}[i]));c.drawRoundRect(x,y,x+124,y+94,14,14,p);if(i==2){p.setShader(new LinearGradient(x,y,x,y+94,new int[]{Color.parseColor("#BCD4F3"),Color.parseColor("#E6EEF9")},null,Shader.TileMode.CLAMP));c.drawRoundRect(x+7,y+7,x+117,y+87,9,9,p);p.setShader(null);p.setColor(Color.parseColor("#FFF8DD"));c.drawCircle(x+82,y+31,11,p);Path hill=new Path();hill.moveTo(x+7,y+74);hill.cubicTo(x+42,y+28,x+78,y+99,x+117,y+52);hill.lineTo(x+117,y+87);hill.lineTo(x+7,y+87);hill.close();p.setColor(Color.parseColor("#718DAB"));c.drawPath(hill,p);}c.restore();}c.restore();}
+                                                                                                                                                                                                                                                                                                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/3b73f270b7cd/app_v03/lumix-hdr/android/app/src/main/java/de/weinert/lumixhdr/MainActivity.java:156: Warning: Avoid object allocations during draw/layout operations (preallocate and reuse instead) [DrawAllocation]
+        @Override protected void onDraw(Canvas c){float s=Math.min(getWidth()/280f,getHeight()/144f);c.save();c.translate((getWidth()-280*s)/2,0);c.scale(s,s);for(int i=0;i<3;i++){c.save();c.rotate((i-1)*10,140,78);float x=70+i*9,y=22+i*3;p.setStyle(Paint.Style.FILL);p.setColor(Color.parseColor(ui.dark?new String[]{"#273142","#394A63","#A2BCDF"}[i]:new String[]{"#CDD8E9","#9BB5DB","#EDF3FE"}[i]));c.drawRoundRect(x,y,x+124,y+94,14,14,p);if(i==2){p.setShader(new LinearGradient(x,y,x,y+94,new int[]{Color.parseColor("#BCD4F3"),Color.parseColor("#E6EEF9")},null,Shader.TileMode.CLAMP));c.drawRoundRect(x+7,y+7,x+117,y+87,9,9,p);p.setShader(null);p.setColor(Color.parseColor("#FFF8DD"));c.drawCircle(x+82,y+31,11,p);Path hill=new Path();hill.moveTo(x+7,y+74);hill.cubicTo(x+42,y+28,x+78,y+99,x+117,y+52);hill.lineTo(x+117,y+87);hill.lineTo(x+7,y+87);hill.close();p.setColor(Color.parseColor("#718DAB"));c.drawPath(hill,p);}c.restore();}c.restore();}
+                                                                                                                                                                                                                                                                                                                                                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/3b73f270b7cd/app_v03/lumix-hdr/android/app/src/main/java/de/weinert/lumixhdr/MainActivity.java:156: Warning: Avoid object allocations during draw/layout operations (preallocate and reuse instead) [DrawAllocation]
+        @Override protected void onDraw(Canvas c){float s=Math.min(getWidth()/280f,getHeight()/144f);c.save();c.translate((getWidth()-280*s)/2,0);c.scale(s,s);for(int i=0;i<3;i++){c.save();c.rotate((i-1)*10,140,78);float x=70+i*9,y=22+i*3;p.setStyle(Paint.Style.FILL);p.setColor(Color.parseColor(ui.dark?new String[]{"#273142","#394A63","#A2BCDF"}[i]:new String[]{"#CDD8E9","#9BB5DB","#EDF3FE"}[i]));c.drawRoundRect(x,y,x+124,y+94,14,14,p);if(i==2){p.setShader(new LinearGradient(x,y,x,y+94,new int[]{Color.parseColor("#BCD4F3"),Color.parseColor("#E6EEF9")},null,Shader.TileMode.CLAMP));c.drawRoundRect(x+7,y+7,x+117,y+87,9,9,p);p.setShader(null);p.setColor(Color.parseColor("#FFF8DD"));c.drawCircle(x+82,y+31,11,p);Path hill=new Path();hill.moveTo(x+7,y+74);hill.cubicTo(x+42,y+28,x+78,y+99,x+117,y+52);hill.lineTo(x+117,y+87);hill.lineTo(x+7,y+87);hill.close();p.setColor(Color.parseColor("#718DAB"));c.drawPath(hill,p);}c.restore();}c.restore();}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/3b73f270b7cd/app_v03/lumix-hdr/android/app/src/main/java/de/weinert/lumixhdr/MainActivity.java:156: Warning: Avoid object allocations during draw/layout operations (preallocate and reuse instead) [DrawAllocation]
+        @Override protected void onDraw(Canvas c){float s=Math.min(getWidth()/280f,getHeight()/144f);c.save();c.translate((getWidth()-280*s)/2,0);c.scale(s,s);for(int i=0;i<3;i++){c.save();c.rotate((i-1)*10,140,78);float x=70+i*9,y=22+i*3;p.setStyle(Paint.Style.FILL);p.setColor(Color.parseColor(ui.dark?new String[]{"#273142","#394A63","#A2BCDF"}[i]:new String[]{"#CDD8E9","#9BB5DB","#EDF3FE"}[i]));c.drawRoundRect(x,y,x+124,y+94,14,14,p);if(i==2){p.setShader(new LinearGradient(x,y,x,y+94,new int[]{Color.parseColor("#BCD4F3"),Color.parseColor("#E6EEF9")},null,Shader.TileMode.CLAMP));c.drawRoundRect(x+7,y+7,x+117,y+87,9,9,p);p.setShader(null);p.setColor(Color.parseColor("#FFF8DD"));c.drawCircle(x+82,y+31,11,p);Path hill=new Path();hill.moveTo(x+7,y+74);hill.cubicTo(x+42,y+28,x+78,y+99,x+117,y+52);hill.lineTo(x+117,y+87);hill.lineTo(x+7,y+87);hill.close();p.setColor(Color.parseColor("#718DAB"));c.drawPath(hill,p);}c.restore();}c.restore();}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/3b73f270b7cd/app_v03/lumix-hdr/android/app/src/main/java/de/weinert/lumixhdr/MainActivity.java:156: Warning: Avoid object allocations during draw/layout operations (preallocate and reuse instead) [DrawAllocation]
+        @Override protected void onDraw(Canvas c){float s=Math.min(getWidth()/280f,getHeight()/144f);c.save();c.translate((getWidth()-280*s)/2,0);c.scale(s,s);for(int i=0;i<3;i++){c.save();c.rotate((i-1)*10,140,78);float x=70+i*9,y=22+i*3;p.setStyle(Paint.Style.FILL);p.setColor(Color.parseColor(ui.dark?new String[]{"#273142","#394A63","#A2BCDF"}[i]:new String[]{"#CDD8E9","#9BB5DB","#EDF3FE"}[i]));c.drawRoundRect(x,y,x+124,y+94,14,14,p);if(i==2){p.setShader(new LinearGradient(x,y,x,y+94,new int[]{Color.parseColor("#BCD4F3"),Color.parseColor("#E6EEF9")},null,Shader.TileMode.CLAMP));c.drawRoundRect(x+7,y+7,x+117,y+87,9,9,p);p.setShader(null);p.setColor(Color.parseColor("#FFF8DD"));c.drawCircle(x+82,y+31,11,p);Path hill=new Path();hill.moveTo(x+7,y+74);hill.cubicTo(x+42,y+28,x+78,y+99,x+117,y+52);hill.lineTo(x+117,y+87);hill.lineTo(x+7,y+87);hill.close();p.setColor(Color.parseColor("#718DAB"));c.drawPath(hill,p);}c.restore();}c.restore();}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ~~~~~~~~~~
+/workspace/scratch/3b73f270b7cd/app_v03/lumix-hdr/android/app/src/main/java/de/weinert/lumixhdr/StudioTheme.java:51: Warning: Avoid object allocations during draw/layout operations (preallocate and reuse instead) [DrawAllocation]
+                case "photos":c.drawRoundRect(5,3,22,20,3,3,paint);c.drawLine(2,7,2,21,paint);c.drawLine(2,21,17,21,paint);c.drawCircle(10,8,1.2f,paint);Path p=new Path();p.moveTo(6,17);p.lineTo(12,11);p.lineTo(17,16);p.lineTo(20,13);p.lineTo(22,15);c.drawPath(p,paint);break;
+                                                                                                                                                                ~~~~~~~~~~
+
+   Explanation for issues of type "DrawAllocation":
+   You should avoid allocating objects during a drawing or layout operation.
+   These are called frequently, so a smooth UI can be interrupted by garbage
+   collection pauses caused by the object allocations.
+
+   The way this is generally handled is to allocate the needed objects up
+   front and to reuse them for each drawing operation.
+
+   Some methods allocate memory on your behalf (such as Bitmap.create), and
+   these should be handled in the same way.
+
+/workspace/scratch/3b73f270b7cd/app_v03/lumix-hdr/android/app/src/main/java/de/weinert/lumixhdr/StudioTheme.java:44: Warning: Custom view Glyph is missing constructor used by tools: (Context) or (Context,AttributeSet) or (Context,AttributeSet,int) [ViewConstructor]
+    static final class Glyph extends View {
+                       ~~~~~
+
+   Explanation for issues of type "ViewConstructor":
+   Some layout tools (such as the Android layout editor) need to find a
+   constructor with one of the following signatures:
+   * View(Context context)
+   * View(Context context, AttributeSet attrs)
+   * View(Context context, AttributeSet attrs, int defStyle)
+
+   If your custom view needs to perform initialization which does not apply
+   when used in a layout editor, you can surround the given code with a check
+   to see if View#isInEditMode() is false, since that method will return false
+   at runtime but true within a user interface editor.
+
+/workspace/scratch/3b73f270b7cd/app_v03/lumix-hdr/android/app/src/main/java/de/weinert/lumixhdr/ModernCameraPanel.java:99: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+        try{CameraTrust.parsePin(pin.getText().toString());trustStep.setText("Fingerabdruck deiner Kamera ist hinterlegt.");}catch(Exception e){trustStep.setText("Einmalig per Bluetooth oder mit bekanntem Fingerabdruck.");}
+                                                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/scratch/3b73f270b7cd/app_v03/lumix-hdr/android/app/src/main/java/de/weinert/lumixhdr/ModernCameraPanel.java:99: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+        try{CameraTrust.parsePin(pin.getText().toString());trustStep.setText("Fingerabdruck deiner Kamera ist hinterlegt.");}catch(Exception e){trustStep.setText("Einmalig per Bluetooth oder mit bekanntem Fingerabdruck.");}
+                                                                                                                                                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "SetTextI18n":
+   When calling TextView#setText
+   * Never call Number#toString() to format numbers; it will not handle
+   fraction separators and locale-specific digits properly. Consider using
+   String#format with proper format specifications (%d or %f) instead.
+   * Do not pass a string literal (e.g. "Hello") to display text. Hardcoded
+   text can not be properly translated to other languages. Consider using
+   Android resource strings instead.
+   * Do not build messages by concatenating text chunks. Such messages can not
+   be properly translated.
+
+   https://developer.android.com/guide/topics/resources/localization.html
+
+0 errors, 11 warnings

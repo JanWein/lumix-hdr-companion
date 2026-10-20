@@ -1,0 +1,15 @@
+{
+  "mode": "hdr",
+  "max_side": 2400,
+  "align": false,
+  "sources": [
+    "demo/BRACKET_0.jpg",
+    "demo/BRACKET_1.jpg",
+    "demo/BRACKET_2.jpg"
+  ],
+  "jpeg": "demo-results/HDR_fc8f11326982ab3b2cec_hdr_2400_0.jpg",
+  "radiance_hdr": "demo-results/HDR_fc8f11326982ab3b2cec_hdr_2400_0.hdr",
+  "width": 576,
+  "height": 384,
+  "limitations": "Static scenes only; no deghosting. JPEG tone curves affect radiometry. SDR JPEG has no gain map."
+}

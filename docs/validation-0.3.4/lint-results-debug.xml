@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.9.2">
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of androidx.exifinterface:exifinterface than 1.4.1 is available: 1.4.2"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    implementation &apos;androidx.exifinterface:exifinterface:1.4.1&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/workspace/scratch/3b73f270b7cd/app_jpeg/lumix-hdr/android/app/build.gradle"
+            line="24"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of androidx.documentfile:documentfile than 1.0.1 is available: 1.1.0"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    implementation &apos;androidx.documentfile:documentfile:1.0.1&apos;"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/workspace/scratch/3b73f270b7cd/app_jpeg/lumix-hdr/android/app/build.gradle"
+            line="25"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="CustomX509TrustManager"
+        severity="Warning"
+        message="Implementing a custom `X509TrustManager` is error-prone and likely to be insecure. It is likely to disable certificate validation altogether, and is non-trivial to implement correctly without calling Android&apos;s default implementation."
+        category="Security"
+        priority="5"
+        summary="Implements custom TLS trust manager"
+        explanation="This check looks for custom `X509TrustManager` implementations."
+        url="https://goo.gle/CustomX509TrustManager"
+        urls="https://goo.gle/CustomX509TrustManager"
+        errorLine1="        X509TrustManager trust=new X509TrustManager(){"
+        errorLine2="                                   ~~~~~~~~~~~~~~~~">
+        <location
+            file="/workspace/scratch/3b73f270b7cd/app_jpeg/lumix-hdr/android/app/src/main/java/de/weinert/lumixhdr/CameraTrust.java"
+            line="38"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="DataExtractionRules"
+        severity="Warning"
+        message="The attribute `android:allowBackup` is deprecated from Android 12 and higher and may be removed in future versions. Consider adding the attribute `android:dataExtractionRules` specifying an `@xml` resource which configures cloud backups and device transfers on Android 12 and higher."
+        category="Security"
+        priority="3"
+        summary="Missing data extraction rules"
+        explanation="Before Android 12, the attributes `android:allowBackup` and `android:fullBackupContent` were used to configure all forms of backup, including cloud backups, device-to-device transfers and adb backup.&#xA;&#xA;In Android 12 and higher, these attributes have been deprecated and will only apply to cloud backups. You should instead use the attribute `android:dataExtractionRules`, specifying an `@xml` resource that configures which files to back up, for cloud backups and for device-to-device transfers, separately. If your `minSdkVersion` supports older versions, you&apos;ll still want to specify an `android:fullBackupContent` resource if the default behavior is not right for your app."
+        url="https://developer.android.com/about/versions/12/backup-restore#xml-changes"
+        urls="https://developer.android.com/about/versions/12/backup-restore#xml-changes,https://goo.gle/DataExtractionRules"
+        errorLine1="        android:allowBackup=&quot;false&quot; android:supportsRtl=&quot;true&quot; android:usesCleartextTraffic=&quot;true&quot;>"
+        errorLine2="                             ~~~~~">
+        <location
+            file="/workspace/scratch/3b73f270b7cd/app_jpeg/lumix-hdr/android/app/src/main/AndroidManifest.xml"
+            line="8"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="DrawAllocation"
+        severity="Warning"
+        message="Avoid object allocations during draw/layout operations (preallocate and reuse instead)"
+        category="Performance"
+        priority="9"
+        summary="Memory allocations within drawing code"
+        explanation="You should avoid allocating objects during a drawing or layout operation. These are called frequently, so a smooth UI can be interrupted by garbage collection pauses caused by the object allocations.&#xA;&#xA;The way this is generally handled is to allocate the needed objects up front and to reuse them for each drawing operation.&#xA;&#xA;Some methods allocate memory on your behalf (such as `Bitmap.create`), and these should be handled in the same way."
+        errorLine1="        @Override protected void onDraw(Canvas c){float s=Math.min(getWidth()/280f,getHeight()/144f);c.save();c.translate((getWidth()-280*s)/2,0);c.scale(s,s);for(int i=0;i&lt;3;i++){c.save();c.rotate((i-1)*10,140,78);float x=70+i*9,y=22+i*3;p.setStyle(Paint.Style.FILL);p.setColor(Color.parseColor(ui.dark?new String[]{&quot;#273142&quot;,&quot;#394A63&quot;,&quot;#A2BCDF&quot;}[i]:new String[]{&quot;#CDD8E9&quot;,&quot;#9BB5DB&quot;,&quot;#EDF3FE&quot;}[i]));c.drawRoundRect(x,y,x+124,y+94,14,14,p);if(i==2){p.setShader(new LinearGradient(x,y,x,y+94,new int[]{Color.parseColor(&quot;#BCD4F3&quot;),Color.parseColor(&quot;#E6EEF9&quot;)},null,Shader.TileMode.CLAMP));c.drawRoundRect(x+7,y+7,x+117,y+87,9,9,p);p.setShader(null);p.setColor(Color.parseColor(&quot;#FFF8DD&quot;));c.drawCircle(x+82,y+31,11,p);Path hill=new Path();hill.moveTo(x+7,y+74);hill.cubicTo(x+42,y+28,x+78,y+99,x+117,y+52);hill.lineTo(x+117,y+87);hill.lineTo(x+7,y+87);hill.close();p.setColor(Color.parseColor(&quot;#718DAB&quot;));c.drawPath(hill,p);}c.restore();}c.restore();}"
+        errorLine2="                                                                                                                                                                                                                                                                                                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/workspace/scratch/3b73f270b7cd/app_jpeg/lumix-hdr/android/app/src/main/java/de/weinert/lumixhdr/MainActivity.java"
+            line="238"
+            column="305"/>
+    </issue>
+
+    <issue
+        id="DrawAllocation"
+        severity="Warning"
+        message="Avoid object allocations during draw/layout operations (preallocate and reuse instead)"
+        category="Performance"
+        priority="9"
+        summary="Memory allocations within drawing code"
+        explanation="You should avoid allocating objects during a drawing or layout operation. These are called frequently, so a smooth UI can be interrupted by garbage collection pauses caused by the object allocations.&#xA;&#xA;The way this is generally handled is to allocate the needed objects up front and to reuse them for each drawing operation.&#xA;&#xA;Some methods allocate memory on your behalf (such as `Bitmap.create`), and these should be handled in the same way."
+        errorLine1="        @Override protected void onDraw(Canvas c){float s=Math.min(getWidth()/280f,getHeight()/144f);c.save();c.translate((getWidth()-280*s)/2,0);c.scale(s,s);for(int i=0;i&lt;3;i++){c.save();c.rotate((i-1)*10,140,78);float x=70+i*9,y=22+i*3;p.setStyle(Paint.Style.FILL);p.setColor(Color.parseColor(ui.dark?new String[]{&quot;#273142&quot;,&quot;#394A63&quot;,&quot;#A2BCDF&quot;}[i]:new String[]{&quot;#CDD8E9&quot;,&quot;#9BB5DB&quot;,&quot;#EDF3FE&quot;}[i]));c.drawRoundRect(x,y,x+124,y+94,14,14,p);if(i==2){p.setShader(new LinearGradient(x,y,x,y+94,new int[]{Color.parseColor(&quot;#BCD4F3&quot;),Color.parseColor(&quot;#E6EEF9&quot;)},null,Shader.TileMode.CLAMP));c.drawRoundRect(x+7,y+7,x+117,y+87,9,9,p);p.setShader(null);p.setColor(Color.parseColor(&quot;#FFF8DD&quot;));c.drawCircle(x+82,y+31,11,p);Path hill=new Path();hill.moveTo(x+7,y+74);hill.cubicTo(x+42,y+28,x+78,y+99,x+117,y+52);hill.lineTo(x+117,y+87);hill.lineTo(x+7,y+87);hill.close();p.setColor(Color.parseColor(&quot;#718DAB&quot;));c.drawPath(hill,p);}c.restore();}c.restore();}"
+        errorLine2="                                                                                                                                                                                                                                                                                                                                                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/workspace/scratch/3b73f270b7cd/app_jpeg/lumix-hdr/android/app/src/main/java/de/weinert/lumixhdr/MainActivity.java"
+            line="238"
+            column="352"/>
+    </issue>
+
+    <issue
+        id="DrawAllocation"
+        severity="Warning"
+        message="Avoid object allocations during draw/layout operations (preallocate and reuse instead)"
+        category="Performance"
+        priority="9"
+        summary="Memory allocations within drawing code"
+        explanation="You should avoid allocating objects during a drawing or layout operation. These are called frequently, so a smooth UI can be interrupted by garbage collection pauses caused by the object allocations.&#xA;&#xA;The way this is generally handled is to allocate the needed objects up front and to reuse them for each drawing operation.&#xA;&#xA;Some methods allocate memory on your behalf (such as `Bitmap.create`), and these should be handled in the same way."
+        errorLine1="        @Override protected void onDraw(Canvas c){float s=Math.min(getWidth()/280f,getHeight()/144f);c.save();c.translate((getWidth()-280*s)/2,0);c.scale(s,s);for(int i=0;i&lt;3;i++){c.save();c.rotate((i-1)*10,140,78);float x=70+i*9,y=22+i*3;p.setStyle(Paint.Style.FILL);p.setColor(Color.parseColor(ui.dark?new String[]{&quot;#273142&quot;,&quot;#394A63&quot;,&quot;#A2BCDF&quot;}[i]:new String[]{&quot;#CDD8E9&quot;,&quot;#9BB5DB&quot;,&quot;#EDF3FE&quot;}[i]));c.drawRoundRect(x,y,x+124,y+94,14,14,p);if(i==2){p.setShader(new LinearGradient(x,y,x,y+94,new int[]{Color.parseColor(&quot;#BCD4F3&quot;),Color.parseColor(&quot;#E6EEF9&quot;)},null,Shader.TileMode.CLAMP));c.drawRoundRect(x+7,y+7,x+117,y+87,9,9,p);p.setShader(null);p.setColor(Color.parseColor(&quot;#FFF8DD&quot;));c.drawCircle(x+82,y+31,11,p);Path hill=new Path();hill.moveTo(x+7,y+74);hill.cubicTo(x+42,y+28,x+78,y+99,x+117,y+52);hill.lineTo(x+117,y+87);hill.lineTo(x+7,y+87);hill.close();p.setColor(Color.parseColor(&quot;#718DAB&quot;));c.drawPath(hill,p);}c.restore();}c.restore();}"
+        errorLine2="                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/workspace/scratch/3b73f270b7cd/app_jpeg/lumix-hdr/android/app/src/main/java/de/weinert/lumixhdr/MainActivity.java"
+            line="238"
+            column="462"/>
+    </issue>
+
+    <issue
+        id="DrawAllocation"
+        severity="Warning"
+        message="Avoid object allocations during draw/layout operations (preallocate and reuse instead)"
+        category="Performance"
+        priority="9"
+        summary="Memory allocations within drawing code"
+        explanation="You should avoid allocating objects during a drawing or layout operation. These are called frequently, so a smooth UI can be interrupted by garbage collection pauses caused by the object allocations.&#xA;&#xA;The way this is generally handled is to allocate the needed objects up front and to reuse them for each drawing operation.&#xA;&#xA;Some methods allocate memory on your behalf (such as `Bitmap.create`), and these should be handled in the same way."
+        errorLine1="        @Override protected void onDraw(Canvas c){float s=Math.min(getWidth()/280f,getHeight()/144f);c.save();c.translate((getWidth()-280*s)/2,0);c.scale(s,s);for(int i=0;i&lt;3;i++){c.save();c.rotate((i-1)*10,140,78);float x=70+i*9,y=22+i*3;p.setStyle(Paint.Style.FILL);p.setColor(Color.parseColor(ui.dark?new String[]{&quot;#273142&quot;,&quot;#394A63&quot;,&quot;#A2BCDF&quot;}[i]:new String[]{&quot;#CDD8E9&quot;,&quot;#9BB5DB&quot;,&quot;#EDF3FE&quot;}[i]));c.drawRoundRect(x,y,x+124,y+94,14,14,p);if(i==2){p.setShader(new LinearGradient(x,y,x,y+94,new int[]{Color.parseColor(&quot;#BCD4F3&quot;),Color.parseColor(&quot;#E6EEF9&quot;)},null,Shader.TileMode.CLAMP));c.drawRoundRect(x+7,y+7,x+117,y+87,9,9,p);p.setShader(null);p.setColor(Color.parseColor(&quot;#FFF8DD&quot;));c.drawCircle(x+82,y+31,11,p);Path hill=new Path();hill.moveTo(x+7,y+74);hill.cubicTo(x+42,y+28,x+78,y+99,x+117,y+52);hill.lineTo(x+117,y+87);hill.lineTo(x+7,y+87);hill.close();p.setColor(Color.parseColor(&quot;#718DAB&quot;));c.drawPath(hill,p);}c.restore();}c.restore();}"
+        errorLine2="                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/workspace/scratch/3b73f270b7cd/app_jpeg/lumix-hdr/android/app/src/main/java/de/weinert/lumixhdr/MainActivity.java"
+            line="238"
+            column="492"/>
+    </issue>
+
+    <issue
+        id="DrawAllocation"
+        severity="Warning"
+        message="Avoid object allocations during draw/layout operations (preallocate and reuse instead)"
+        category="Performance"
+        priority="9"
+        summary="Memory allocations within drawing code"
+        explanation="You should avoid allocating objects during a drawing or layout operation. These are called frequently, so a smooth UI can be interrupted by garbage collection pauses caused by the object allocations.&#xA;&#xA;The way this is generally handled is to allocate the needed objects up front and to reuse them for each drawing operation.&#xA;&#xA;Some methods allocate memory on your behalf (such as `Bitmap.create`), and these should be handled in the same way."
+        errorLine1="        @Override protected void onDraw(Canvas c){float s=Math.min(getWidth()/280f,getHeight()/144f);c.save();c.translate((getWidth()-280*s)/2,0);c.scale(s,s);for(int i=0;i&lt;3;i++){c.save();c.rotate((i-1)*10,140,78);float x=70+i*9,y=22+i*3;p.setStyle(Paint.Style.FILL);p.setColor(Color.parseColor(ui.dark?new String[]{&quot;#273142&quot;,&quot;#394A63&quot;,&quot;#A2BCDF&quot;}[i]:new String[]{&quot;#CDD8E9&quot;,&quot;#9BB5DB&quot;,&quot;#EDF3FE&quot;}[i]));c.drawRoundRect(x,y,x+124,y+94,14,14,p);if(i==2){p.setShader(new LinearGradient(x,y,x,y+94,new int[]{Color.parseColor(&quot;#BCD4F3&quot;),Color.parseColor(&quot;#E6EEF9&quot;)},null,Shader.TileMode.CLAMP));c.drawRoundRect(x+7,y+7,x+117,y+87,9,9,p);p.setShader(null);p.setColor(Color.parseColor(&quot;#FFF8DD&quot;));c.drawCircle(x+82,y+31,11,p);Path hill=new Path();hill.moveTo(x+7,y+74);hill.cubicTo(x+42,y+28,x+78,y+99,x+117,y+52);hill.lineTo(x+117,y+87);hill.lineTo(x+7,y+87);hill.close();p.setColor(Color.parseColor(&quot;#718DAB&quot;));c.drawPath(hill,p);}c.restore();}c.restore();}"
+        errorLine2="                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ~~~~~~~~~~">
+        <location
+            file="/workspace/scratch/3b73f270b7cd/app_jpeg/lumix-hdr/android/app/src/main/java/de/weinert/lumixhdr/MainActivity.java"
+            line="238"
+            column="727"/>
+    </issue>
+
+    <issue
+        id="DrawAllocation"
+        severity="Warning"
+        message="Avoid object allocations during draw/layout operations (preallocate and reuse instead)"
+        category="Performance"
+        priority="9"
+        summary="Memory allocations within drawing code"
+        explanation="You should avoid allocating objects during a drawing or layout operation. These are called frequently, so a smooth UI can be interrupted by garbage collection pauses caused by the object allocations.&#xA;&#xA;The way this is generally handled is to allocate the needed objects up front and to reuse them for each drawing operation.&#xA;&#xA;Some methods allocate memory on your behalf (such as `Bitmap.create`), and these should be handled in the same way."
+        errorLine1="                case &quot;photos&quot;:c.drawRoundRect(5,3,22,20,3,3,paint);c.drawLine(2,7,2,21,paint);c.drawLine(2,21,17,21,paint);c.drawCircle(10,8,1.2f,paint);Path p=new Path();p.moveTo(6,17);p.lineTo(12,11);p.lineTo(17,16);p.lineTo(20,13);p.lineTo(22,15);c.drawPath(p,paint);break;"
+        errorLine2="                                                                                                                                                                ~~~~~~~~~~">
+        <location
+            file="/workspace/scratch/3b73f270b7cd/app_jpeg/lumix-hdr/android/app/src/main/java/de/weinert/lumixhdr/StudioTheme.java"
+            line="52"
+            column="161"/>
+    </issue>
+
+    <issue
+        id="ViewConstructor"
+        severity="Warning"
+        message="Custom view `Glyph` is missing constructor used by tools: `(Context)` or `(Context,AttributeSet)` or `(Context,AttributeSet,int)`"
+        category="Usability"
+        priority="3"
+        summary="Missing View constructors for XML inflation"
+        explanation="Some layout tools (such as the Android layout editor) need to find a constructor with one of the following signatures:&#xA;* `View(Context context)`&#xA;* `View(Context context, AttributeSet attrs)`&#xA;* `View(Context context, AttributeSet attrs, int defStyle)`&#xA;&#xA;If your custom view needs to perform initialization which does not apply when used in a layout editor, you can surround the given code with a check to see if `View#isInEditMode()` is false, since that method will return `false` at runtime but true within a user interface editor."
+        errorLine1="    static final class Glyph extends View {"
+        errorLine2="                       ~~~~~">
+        <location
+            file="/workspace/scratch/3b73f270b7cd/app_jpeg/lumix-hdr/android/app/src/main/java/de/weinert/lumixhdr/StudioTheme.java"
+            line="45"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        severity="Warning"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        category="Internationalization"
+        priority="6"
+        summary="TextView Internationalization"
+        explanation="When calling `TextView#setText`&#xA;* Never call `Number#toString()` to format numbers; it will not handle fraction separators and locale-specific digits properly. Consider using `String#format` with proper format specifications (`%d` or `%f`) instead.&#xA;* Do not pass a string literal (e.g. &quot;Hello&quot;) to display text. Hardcoded text can not be properly translated to other languages. Consider using Android resource strings instead.&#xA;* Do not build messages by concatenating text chunks. Such messages can not be properly translated."
+        url="https://developer.android.com/guide/topics/resources/localization.html"
+        urls="https://developer.android.com/guide/topics/resources/localization.html"
+        errorLine1="        try{CameraTrust.parsePin(pin.getText().toString());trustStep.setText(&quot;Fingerabdruck deiner Kamera ist hinterlegt.&quot;);}catch(Exception e){trustStep.setText(&quot;Einmalig per Bluetooth oder mit bekanntem Fingerabdruck.&quot;);}"
+        errorLine2="                                                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/workspace/scratch/3b73f270b7cd/app_jpeg/lumix-hdr/android/app/src/main/java/de/weinert/lumixhdr/ModernCameraPanel.java"
+            line="99"
+            column="78"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        severity="Warning"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        category="Internationalization"
+        priority="6"
+        summary="TextView Internationalization"
+        explanation="When calling `TextView#setText`&#xA;* Never call `Number#toString()` to format numbers; it will not handle fraction separators and locale-specific digits properly. Consider using `String#format` with proper format specifications (`%d` or `%f`) instead.&#xA;* Do not pass a string literal (e.g. &quot;Hello&quot;) to display text. Hardcoded text can not be properly translated to other languages. Consider using Android resource strings instead.&#xA;* Do not build messages by concatenating text chunks. Such messages can not be properly translated."
+        url="https://developer.android.com/guide/topics/resources/localization.html"
+        urls="https://developer.android.com/guide/topics/resources/localization.html"
+        errorLine1="        try{CameraTrust.parsePin(pin.getText().toString());trustStep.setText(&quot;Fingerabdruck deiner Kamera ist hinterlegt.&quot;);}catch(Exception e){trustStep.setText(&quot;Einmalig per Bluetooth oder mit bekanntem Fingerabdruck.&quot;);}"
+        errorLine2="                                                                                                                                                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/workspace/scratch/3b73f270b7cd/app_jpeg/lumix-hdr/android/app/src/main/java/de/weinert/lumixhdr/ModernCameraPanel.java"
+            line="99"
+            column="163"/>
+    </issue>
+
+</issues>

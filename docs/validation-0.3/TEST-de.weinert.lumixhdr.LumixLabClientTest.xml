@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="de.weinert.lumixhdr.LumixLabClientTest" tests="22" skipped="0" failures="0" errors="0" timestamp="2026-10-20T04:11:06.301Z" hostname="33f8b0f270f4" time="0.402">
+  <properties/>
+  <testcase name="http403ClearsSessionAndDoesNotLeakResponse" classname="de.weinert.lumixhdr.LumixLabClientTest" time="0.112"/>
+  <testcase name="rejectedReauthenticationCannotRetainOldToken" classname="de.weinert.lumixhdr.LumixLabClientTest" time="0.001"/>
+  <testcase name="realTlsHandshakeRejectsWrongCertificatePin" classname="de.weinert.lumixhdr.LumixLabClientTest" time="0.179"/>
+  <testcase name="serverIgnoringSecondRangeCannotDuplicateImage" classname="de.weinert.lumixhdr.LumixLabClientTest" time="0.025"/>
+  <testcase name="diagnosticRedactionRemovesNestedTokensAndPasswords" classname="de.weinert.lumixhdr.LumixLabClientTest" time="0.017"/>
+  <testcase name="truncatedAndNonJpegResponsesAreRemoved" classname="de.weinert.lumixhdr.LumixLabClientTest" time="0.003"/>
+  <testcase name="malformedAndOversizedJsonIsRejected" classname="de.weinert.lumixhdr.LumixLabClientTest" time="0.016"/>
+  <testcase name="liveViewRequestsPreserveIntegerPortAndNoBodyForStop" classname="de.weinert.lumixhdr.LumixLabClientTest" time="0.001"/>
+  <testcase name="authenticationAndQuotedBearerMatchObservedWire" classname="de.weinert.lumixhdr.LumixLabClientTest" time="0.001"/>
+  <testcase name="galleryPaginationAndFilteringUseServerIdsAndTypes" classname="de.weinert.lumixhdr.LumixLabClientTest" time="0.001"/>
+  <testcase name="jpegDownloadUsesOctetBodyAndExactId" classname="de.weinert.lumixhdr.LumixLabClientTest" time="0.001"/>
+  <testcase name="largeImageIsAssembledFromValidatedRanges" classname="de.weinert.lumixhdr.LumixLabClientTest" time="0.011"/>
+  <testcase name="privateAddressesAndPinsAreStrict" classname="de.weinert.lumixhdr.LumixLabClientTest" time="0.006"/>
+  <testcase name="full200IsAcceptedOnlyAsInitialRangeFallback" classname="de.weinert.lumixhdr.LumixLabClientTest" time="0.012"/>
+  <testcase name="jsonErrorIsNeverImportedAsImage" classname="de.weinert.lumixhdr.LumixLabClientTest" time="0.001"/>
+  <testcase name="invalidOrMissingAuthTokenCannotCreateSession" classname="de.weinert.lumixhdr.LumixLabClientTest" time="0.002"/>
+  <testcase name="settingSelectionUsesOnlyAdvertisedItemsOfSelectedType" classname="de.weinert.lumixhdr.LumixLabClientTest" time="0.001"/>
+  <testcase name="application401ClearsSessionEvenWhenHttp200" classname="de.weinert.lumixhdr.LumixLabClientTest" time="0.002"/>
+  <testcase name="redirectsAreRejectedWithoutFollowing" classname="de.weinert.lumixhdr.LumixLabClientTest" time="0.001"/>
+  <testcase name="corruptRangeDeletesPartialFile" classname="de.weinert.lumixhdr.LumixLabClientTest" time="0.003"/>
+  <testcase name="ownIdentityAndNoCopiedPanasonicAppInfo" classname="de.weinert.lumixhdr.LumixLabClientTest" time="0.0"/>
+  <testcase name="captureAndSettingBodiesAreCaseSensitive" classname="de.weinert.lumixhdr.LumixLabClientTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

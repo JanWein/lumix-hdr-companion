@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="de.weinert.lumixhdr.BracketRulesTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-20T05:55:36.595Z" hostname="33f8b0f270f4" time="0.012">
+  <properties/>
+  <testcase name="lateFrame" classname="de.weinert.lumixhdr.BracketRulesTest" time="0.002"/>
+  <testcase name="mixedIso" classname="de.weinert.lumixhdr.BracketRulesTest" time="0.0"/>
+  <testcase name="complete" classname="de.weinert.lumixhdr.BracketRulesTest" time="0.008"/>
+  <testcase name="shuffled" classname="de.weinert.lumixhdr.BracketRulesTest" time="0.0"/>
+  <testcase name="twoSeries" classname="de.weinert.lumixhdr.BracketRulesTest" time="0.0"/>
+  <testcase name="noDuplicates" classname="de.weinert.lumixhdr.BracketRulesTest" time="0.0"/>
+  <testcase name="repeatedExposure" classname="de.weinert.lumixhdr.BracketRulesTest" time="0.0"/>
+  <testcase name="missing" classname="de.weinert.lumixhdr.BracketRulesTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

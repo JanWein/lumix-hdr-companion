@@ -1,0 +1,189 @@
+{
+  "scope": "Static observations in supplied LUMIX Lab 3.1.0, not a verified S9 server specification",
+  "default_base_url": "https://192.168.54.1/",
+  "base_url_mutable": true,
+  "authorization_value_template": "'Bearer <token>'",
+  "authorization_outer_apostrophes_are_literal": true,
+  "auth_response_token_path": "Data.AuthToken",
+  "application_response_code_path": "Header.ResponseCode",
+  "tls": {
+    "observed_pin": "SHA256(leaf_certificate_DER)",
+    "pin_acquisition_in_observed_flow": "BLE",
+    "pure_wifi_first_enrollment": "unverified"
+  },
+  "endpoints": [
+    {
+      "path": "auth",
+      "method": "POST",
+      "request_body_example_or_status": {
+        "AppInfo": "<app-info>",
+        "Uuid": "<own-stable-uuid>",
+        "FriendlyName": "<friendly-name>"
+      },
+      "authorization_required_by_client_declaration": false,
+      "content_type": "application/json",
+      "accept": "application/json",
+      "s9_hardware_verified": false
+    },
+    {
+      "path": "remote/get-state",
+      "method": "POST",
+      "request_body_example_or_status": null,
+      "authorization_required_by_client_declaration": true,
+      "content_type": "application/json",
+      "accept": "application/json",
+      "s9_hardware_verified": false
+    },
+    {
+      "path": "remote/get-setting",
+      "method": "POST",
+      "request_body_example_or_status": {
+        "Type": "shtrspeed"
+      },
+      "authorization_required_by_client_declaration": true,
+      "content_type": "application/json",
+      "accept": "application/json",
+      "s9_hardware_verified": false
+    },
+    {
+      "path": "remote/set-setting",
+      "method": "POST",
+      "request_body_example_or_status": {
+        "Type": "shtrspeed",
+        "Value": "<camera-advertised-value>"
+      },
+      "authorization_required_by_client_declaration": true,
+      "content_type": "application/json",
+      "accept": "application/json",
+      "s9_hardware_verified": false
+    },
+    {
+      "path": "remote/camctrl",
+      "method": "POST",
+      "request_body_example_or_status": {
+        "Type": "<control-type>",
+        "Value": "<value>"
+      },
+      "authorization_required_by_client_declaration": true,
+      "content_type": "application/json",
+      "accept": "application/json",
+      "s9_hardware_verified": false
+    },
+    {
+      "path": "remote/camcmd",
+      "method": "POST",
+      "request_body_example_or_status": {
+        "Command": "capture"
+      },
+      "authorization_required_by_client_declaration": true,
+      "content_type": "application/json",
+      "accept": "application/json",
+      "s9_hardware_verified": false
+    },
+    {
+      "path": "remote/get-lvport",
+      "method": "POST",
+      "request_body_example_or_status": null,
+      "authorization_required_by_client_declaration": true,
+      "content_type": "application/json",
+      "accept": "application/json",
+      "s9_hardware_verified": false
+    },
+    {
+      "path": "remote/start-stream",
+      "method": "POST",
+      "request_body_example_or_status": {
+        "UDPPortNumber": "<integer-port>"
+      },
+      "authorization_required_by_client_declaration": true,
+      "content_type": "application/json",
+      "accept": "application/json",
+      "s9_hardware_verified": false
+    },
+    {
+      "path": "remote/stop-stream",
+      "method": "POST",
+      "request_body_example_or_status": null,
+      "authorization_required_by_client_declaration": true,
+      "content_type": "application/json",
+      "accept": "application/json",
+      "s9_hardware_verified": false
+    },
+    {
+      "path": "media/gallery/count",
+      "method": "POST",
+      "request_body_example_or_status": "body-schema-partially-unresolved",
+      "authorization_required_by_client_declaration": true,
+      "content_type": "application/json",
+      "accept": "application/json",
+      "s9_hardware_verified": false
+    },
+    {
+      "path": "media/gallery/info",
+      "method": "POST",
+      "request_body_example_or_status": "body-schema-unresolved",
+      "authorization_required_by_client_declaration": true,
+      "content_type": "application/json",
+      "accept": "application/json",
+      "s9_hardware_verified": false
+    },
+    {
+      "path": "media/gallery/thumbnail",
+      "method": "POST",
+      "request_body_example_or_status": "body-schema-unresolved",
+      "authorization_required_by_client_declaration": true,
+      "content_type": "application/json",
+      "accept": "binary/octet-stream",
+      "s9_hardware_verified": false
+    },
+    {
+      "path": "media/image",
+      "method": "POST",
+      "request_body_example_or_status": {
+        "ImageId": "<selected-image-id>",
+        "Type": "<integer-type>",
+        "ImageSize": "<integer-size-mode>"
+      },
+      "authorization_required_by_client_declaration": true,
+      "content_type": "application/octet-stream",
+      "accept": "binary/octet-stream",
+      "s9_hardware_verified": false
+    }
+  ],
+  "optional_fields": {
+    "remote/set-setting": [
+      "Value2"
+    ],
+    "remote/camctrl": [
+      "Value2"
+    ],
+    "media/image": [
+      "BurstId"
+    ]
+  },
+  "image_optional_headers": {
+    "Range": "bytes=<start>-<end>"
+  },
+  "settings_type_vocabulary": [
+    "shtrspeed",
+    "iso",
+    "exposure",
+    "focal",
+    "quality",
+    "drivemode",
+    "focusmode",
+    "whitebalance",
+    "recmode1",
+    "recmode2",
+    "operatepriority",
+    "liveviewsize"
+  ],
+  "constraints": [
+    "Do not infer camera Value codes from human-readable seconds/ISO.",
+    "Do not assume all endpoints or settings work on every S9 firmware.",
+    "BLE registration transform seed unresolved.",
+    "Gallery bodies and file-type enums incomplete.",
+    "No real camera, auth session, download, HDR merge or Android application was tested."
+  ],
+  "evidence_method": "Androguard DEX annotations/disassembly and direct standalone JADX, separate from REA inventory evidence"
+}

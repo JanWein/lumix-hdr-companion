@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="de.weinert.lumixhdr.ResultDeleteTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-20T08:47:50.959Z" hostname="33f8b0f270f4" time="0.004">
+  <properties/>
+  <testcase name="rejectsSymlinkEscapingResultDirectory" classname="de.weinert.lumixhdr.ResultDeleteTest" time="0.001"/>
+  <testcase name="validatesBothPathsBeforeDeletingEither" classname="de.weinert.lumixhdr.ResultDeleteTest" time="0.001"/>
+  <testcase name="rejectsMismatchedPairsAndDirectories" classname="de.weinert.lumixhdr.ResultDeleteTest" time="0.001"/>
+  <testcase name="deletesPairKeepingOtherResultsOriginalsAndExportedCopies" classname="de.weinert.lumixhdr.ResultDeleteTest" time="0.0"/>
+  <testcase name="deletesHdrWithoutPreview" classname="de.weinert.lumixhdr.ResultDeleteTest" time="0.001"/>
+  <testcase name="deletesJpegOnlyAndRepeatedDeletionIsHarmless" classname="de.weinert.lumixhdr.ResultDeleteTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
