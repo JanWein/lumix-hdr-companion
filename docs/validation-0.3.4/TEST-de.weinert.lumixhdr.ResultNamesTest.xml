@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="de.weinert.lumixhdr.ResultNamesTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-20T09:18:50.081Z" hostname="33f8b0f270f4" time="0.005">
+  <properties/>
+  <testcase name="limitsNamesByUnicodeCharactersRatherThanUtf16Units" classname="de.weinert.lumixhdr.ResultNamesTest" time="0.004"/>
+  <testcase name="rejectsEmptyNamesPathsAndUnsupportedFileCharacters" classname="de.weinert.lumixhdr.ResultNamesTest" time="0.0"/>
+  <testcase name="acceptsReadableNamesAndNormalizesUnicodeAndExtensions" classname="de.weinert.lumixhdr.ResultNamesTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
